@@ -1,0 +1,2 @@
+# Aplikace-pro-spravu-videokartoteky-ve-formatu-ODF-ODFKartJ2-
+Studenti navrhnou a implementují desktopovou aplikaci na platformě Java, která umožní správu médií s videoobsahem. Jako zdroj dat bude použit sešít ve formátu ODF, který dodá zadavatel.  Aplikace by mela zvladat:      pridani kategorie medii     pridani media do zvolene kategorie     vyhledani Filmu/titulu v kartotece     odstraneni media z kartoteky     odstraneni kategorie z kartoteky     zmena kategorie u media  Aplikace by mela mit GUI implementované pomocí knihovny Swing a mela by splnovat pravidla CUA.
