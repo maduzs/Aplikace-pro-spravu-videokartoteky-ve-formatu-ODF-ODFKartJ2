@@ -3,9 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package main;
+package cz.muni.fi.pb138.videokartoteka;
 
-import gui.MainWindow;
+import cz.muni.fi.pb138.videokartoteka.gui.MainWindow;
 import javax.swing.JFrame;
 
 /**

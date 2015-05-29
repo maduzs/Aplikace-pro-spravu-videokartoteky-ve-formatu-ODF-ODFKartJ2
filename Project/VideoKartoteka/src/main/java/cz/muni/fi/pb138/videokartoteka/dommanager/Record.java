@@ -1,5 +1,5 @@
 
-package dommanager;
+package cz.muni.fi.pb138.videokartoteka.dommanager;
 
 /**
  * Placeholder for Record object

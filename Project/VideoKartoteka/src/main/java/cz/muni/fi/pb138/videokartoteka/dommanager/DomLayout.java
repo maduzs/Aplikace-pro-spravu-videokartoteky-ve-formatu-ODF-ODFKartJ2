@@ -1,5 +1,5 @@
 
-package dommanager;
+package cz.muni.fi.pb138.videokartoteka.dommanager;
 
 /**
  * This interface describes functionality of the application
