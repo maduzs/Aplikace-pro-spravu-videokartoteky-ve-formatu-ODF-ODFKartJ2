@@ -5,24 +5,6 @@
  */
 package cz.muni.fi.pb138.videokartoteka.google;
 
-import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
-import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
-import com.google.api.client.googleapis.auth.oauth2.GoogleTokenResponse;
-import com.google.api.client.http.HttpTransport;
-import com.google.api.client.http.javanet.NetHttpTransport;
-import com.google.api.client.json.JsonFactory;
-import com.google.api.client.json.jackson.JacksonFactory;
-import com.google.api.services.drive.Drive;
-import com.google.api.services.drive.DriveScopes;
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-/**
- *
- * @author xnevrela
- */
 public class GoogleConnection {
 
     static {
@@ -43,8 +25,9 @@ public class GoogleConnection {
     private GoogleTokenResponse response;
     private GoogleCredential credential;
     private Drive service;
-
-    private GoogleConnection() {
+    private boolean connected;
+    
+    public GoogleConnection() {
         httpTransport = new NetHttpTransport();
         jsonFactory = new JacksonFactory();
 
@@ -54,8 +37,13 @@ public class GoogleConnection {
                 .setApprovalPrompt("auto").build();
 
         url = flow.newAuthorizationUrl().setRedirectUri(REDIRECT_URI).build();
+        connected = false;
     }
-
+    
+    public boolean isConnected() {
+        return this.connected;
+    }
+    
     public static GoogleConnection getConnection() {
         return connection;
     }
@@ -70,6 +58,7 @@ public class GoogleConnection {
         try {
             response = flow.newTokenRequest(code).setRedirectUri(REDIRECT_URI).execute();
             credential = new GoogleCredential().setFromTokenResponse(response);
+            this.connected = true;
         } catch (Exception ex) {
             Logger.getLogger(GoogleConnection.class.getName()).log(Level.SEVERE, null, ex);
             result = false;
@@ -78,11 +67,17 @@ public class GoogleConnection {
         return result;
     }
 
-    public GoogleDriveService buildService() {
+    public GoogleDriveService buildService() {       
+        if (credential == null) {
+            return null;
+        }
         if (service == null) {
             service = new Drive.Builder(httpTransport, jsonFactory, credential).build();;
         }
 
         return new GoogleDriveService(service);
+    }    
+    public void  close() {
+        
     }
 }

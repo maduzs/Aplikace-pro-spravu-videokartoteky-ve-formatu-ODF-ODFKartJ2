@@ -5,13 +5,14 @@
  */
 package cz.muni.fi.pb138.videokartoteka;
 
-import cz.muni.fi.pb138.videokartoteka.gui.MainWindow;
+import cz.muni.fi.pb138.videokartoteka.gui.MainView;
 import javax.swing.JFrame;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.JFrame;
 
 /**
  *
@@ -37,11 +38,11 @@ public class Main {
                     Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 
-                JFrame mainWindow = new MainWindow();
+                JFrame mainView = new MainView();
 
                 //Display the window.
-                mainWindow.pack();
-                mainWindow.setVisible(true);
+                mainView.pack();
+                mainView.setVisible(true);
             }
         });
     }
