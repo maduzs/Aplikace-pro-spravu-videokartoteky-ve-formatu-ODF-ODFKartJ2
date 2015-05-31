@@ -4,11 +4,25 @@
  */
 package cz.muni.fi.pb138.videokartoteka.gui;
 
+import com.google.api.services.drive.model.File;
 import cz.muni.fi.pb138.videokartoteka.google.GoogleConnection;
 import cz.muni.fi.pb138.videokartoteka.google.GoogleDriveService;
+import java.awt.Color;
+import cz.muni.fi.pb138.videokartoteka.dommanager.DomManager;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.concurrent.ExecutionException;
+import javax.swing.SwingWorker;
+import java.awt.Desktop;
 import java.awt.Image;
 import java.awt.Toolkit;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -16,8 +30,9 @@ import java.net.URL;
  */
 public class MainView extends javax.swing.JFrame {
 
-    GoogleConnection gc;
-    GoogleDriveService service;
+    private GoogleConnection gc;
+    private GoogleDriveService service;
+    private DomManager manager;
 
     /**
      * Creates new form MainView
@@ -447,7 +462,14 @@ public class MainView extends javax.swing.JFrame {
     }//GEN-LAST:event_deleteCategoryButtonActionPerformed
 
     private void categoriesListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_categoriesListValueChanged
+        boolean selected = !categoriesList.isSelectionEmpty();
 
+        deleteCategoryButton.setEnabled(selected);
+        
+        searchTF.setEnabled(selected);
+        addRecordButton.setEnabled(selected);
+        editRecordButton.setEnabled(selected);
+        deleteRecordButton.setEnabled(selected);
     }//GEN-LAST:event_categoriesListValueChanged
 
     private void addRecordButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addRecordButtonActionPerformed
@@ -509,5 +531,35 @@ public class MainView extends javax.swing.JFrame {
     public static Image getImage(final String pathAndFileName) {
         final URL url = Thread.currentThread().getContextClassLoader().getResource(pathAndFileName);
         return Toolkit.getDefaultToolkit().getImage(url);
+    }
+    
+        private class DownloadFileTask extends SwingWorker<java.io.File, Integer> {
+
+        private File fileToDownload;
+        private GoogleDriveService service;
+
+        public DownloadFileTask(GoogleDriveService service, File file) {
+            this.service = service;
+            this.fileToDownload = file;
+        }
+
+        @Override
+        protected java.io.File doInBackground() throws Exception {
+            return service.downloadFile(fileToDownload);
+        }
+
+        @Override
+        protected void done() {
+            //backgroundActionTF.setText("Soubor stáhnut");
+            try {
+                java.io.File downloadedFile = this.get();
+                // TODO open downloaded file to DomManager and load content to gui componenets - categoriesList
+            } catch (InterruptedException ex) {
+                Logger.getLogger(MainView.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (ExecutionException ex) {
+                Logger.getLogger(MainView.class.getName()).log(Level.SEVERE, null, ex);
+                JOptionPane.showMessageDialog(rootPane, "Chyba při otevírání souboru", "Chyba", JOptionPane.ERROR_MESSAGE);
+            }
+        }
     }
 }

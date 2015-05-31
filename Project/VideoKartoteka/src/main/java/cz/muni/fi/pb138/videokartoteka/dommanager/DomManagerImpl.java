@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package cz.muni.fi.pb138.videodesgapps.dommanager;
+package cz.muni.fi.pb138.videokartoteka.dommanager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -151,5 +151,17 @@ public class DomManagerImpl implements DomManager {
         
         table.appendRow();
         return table.getRowCount() - 1;
+    }
+
+    public List<String> listMediaTypes() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public String getRecord(String media, int id) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public List<String> listRecords(String media) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

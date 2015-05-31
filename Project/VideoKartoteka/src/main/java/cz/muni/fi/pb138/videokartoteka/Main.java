@@ -6,7 +6,6 @@
 package cz.muni.fi.pb138.videokartoteka;
 
 import cz.muni.fi.pb138.videokartoteka.gui.MainView;
-import javax.swing.JFrame;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
