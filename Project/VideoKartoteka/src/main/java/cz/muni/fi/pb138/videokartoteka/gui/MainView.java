@@ -7,6 +7,8 @@ package cz.muni.fi.pb138.videokartoteka.gui;
 import com.google.api.services.drive.model.File;
 import cz.muni.fi.pb138.videokartoteka.google.GoogleConnection;
 import cz.muni.fi.pb138.videokartoteka.google.GoogleDriveService;
+import cz.muni.fi.pb138.videokartoteka.dommanager.DomManagerImpl;
+import cz.muni.fi.pb138.videokartoteka.dommanager.MediaType;
 import java.awt.Color;
 import cz.muni.fi.pb138.videokartoteka.dommanager.DomManager;
 import java.beans.PropertyChangeEvent;
@@ -23,6 +25,7 @@ import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import javax.swing.DefaultListModel;
 
 /**
  *
@@ -32,7 +35,7 @@ public class MainView extends javax.swing.JFrame {
 
     private GoogleConnection gc;
     private GoogleDriveService service;
-    private DomManager manager;
+    private DomManagerImpl manager;
 
     /**
      * Creates new form MainView
@@ -422,18 +425,18 @@ public class MainView extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void connectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_connectButtonActionPerformed
-        
+
     }//GEN-LAST:event_connectButtonActionPerformed
 
     private void disconnectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_disconnectButtonActionPerformed
-        
+
     }//GEN-LAST:event_disconnectButtonActionPerformed
 
 
     private void openFileButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openFileButtonActionPerformed
-      
+
     }//GEN-LAST:event_openFileButtonActionPerformed
-  
+
     private void recordsTableValueChanged(javax.swing.event.ListSelectionEvent evt) {
         boolean selected = recordsTable.getSelectedRow() != -1;
 
@@ -441,31 +444,39 @@ public class MainView extends javax.swing.JFrame {
         deleteRecordButton.setEnabled(selected);
     }
 
+
     private void saveFileButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveFileButtonActionPerformed
-        
+
     }//GEN-LAST:event_saveFileButtonActionPerformed
 
     private void saveAsFileButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveAsFileButtonActionPerformed
-        
+
     }//GEN-LAST:event_saveAsFileButtonActionPerformed
 
     private void exitMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitMenuItemActionPerformed
-        
+
     }//GEN-LAST:event_exitMenuItemActionPerformed
 
     private void addCategoryButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addCategoryButtonActionPerformed
+        MediaType type = Dialogs.newMediaTypeDialog();
+        manager.addMediaType(type.getName(), type.getAttributes());
+        DefaultListModel model = (DefaultListModel) categoriesList.getModel();
 
+        model.addElement(type.getName());
     }//GEN-LAST:event_addCategoryButtonActionPerformed
 
     private void deleteCategoryButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteCategoryButtonActionPerformed
+        manager.deleteMediaType(categoriesList.getSelectedValue().toString());
+        DefaultListModel model = (DefaultListModel) categoriesList.getModel();
 
+        model.remove(categoriesList.getSelectedIndex());
     }//GEN-LAST:event_deleteCategoryButtonActionPerformed
 
     private void categoriesListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_categoriesListValueChanged
         boolean selected = !categoriesList.isSelectionEmpty();
 
         deleteCategoryButton.setEnabled(selected);
-        
+
         searchTF.setEnabled(selected);
         addRecordButton.setEnabled(selected);
         editRecordButton.setEnabled(selected);
@@ -532,8 +543,8 @@ public class MainView extends javax.swing.JFrame {
         final URL url = Thread.currentThread().getContextClassLoader().getResource(pathAndFileName);
         return Toolkit.getDefaultToolkit().getImage(url);
     }
-    
-        private class DownloadFileTask extends SwingWorker<java.io.File, Integer> {
+
+    private class DownloadFileTask extends SwingWorker<java.io.File, Integer> {
 
         private File fileToDownload;
         private GoogleDriveService service;
@@ -553,7 +564,13 @@ public class MainView extends javax.swing.JFrame {
             //backgroundActionTF.setText("Soubor stáhnut");
             try {
                 java.io.File downloadedFile = this.get();
-                // TODO open downloaded file to DomManager and load content to gui componenets - categoriesList
+                manager = new DomManagerImpl(downloadedFile);
+
+                DefaultListModel model = new DefaultListModel();
+                for (int i = 0; i < manager.getMediaNames().size(); i++) {
+                    model.add(i, manager.getMediaNames().get(i));
+                }
+                categoriesList.setModel(model);
             } catch (InterruptedException ex) {
                 Logger.getLogger(MainView.class.getName()).log(Level.SEVERE, null, ex);
             } catch (ExecutionException ex) {

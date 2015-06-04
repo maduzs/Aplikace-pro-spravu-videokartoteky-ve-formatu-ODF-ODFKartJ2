@@ -12,25 +12,21 @@ import org.odftoolkit.odfdom.doc.table.OdfTableCell;
  *
  * @author Michal, Lukas
  */
-
 public class DomManagerImpl implements DomManager {
 
     private OdfSpreadsheetDocument inputDocument;
 
-    public List<String> listMediaTypes() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    public String getRecord(String media, int id) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    public List<String> listRecords(String media) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
     public DomManagerImpl(OdfSpreadsheetDocument inputDocument) {
         this.inputDocument = inputDocument;
+    }
+
+    public DomManagerImpl(java.io.File file) {
+        try {
+            inputDocument = (OdfSpreadsheetDocument) OdfSpreadsheetDocument.loadDocument(file);
+        } catch (Exception ex) {
+            System.err.println("Unable to parse input file.");
+            Logger.getLogger(DomManagerImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     @Override
@@ -125,7 +121,6 @@ public class DomManagerImpl implements DomManager {
             throw new IllegalArgumentException("Media not found.");
         }
 
-
         for (int row = 0; row < table.getRowCount(); row++) {
 
             for (int column = 0; column < table.getColumnCount(); column++) {
@@ -154,13 +149,13 @@ public class DomManagerImpl implements DomManager {
         int firstColumn = this.findFirstAttributePosition(media);
         int lastColumn = this.findLastAttributePosition(media);
 
-        for (int col = firstColumn; col < lastColumn+1 ; col++) {
+        for (int col = firstColumn; col < lastColumn + 1; col++) {
             attributes.add(table.getCellByPosition(col, 0).getDisplayText());
         }
 
         for (int row = 1; row < table.getRowCount(); row++) {
             List rowCells = new ArrayList<String>();
-            for (int col = firstColumn; col < lastColumn +1; col++) {
+            for (int col = firstColumn; col < lastColumn + 1; col++) {
                 rowCells.add(table.getCellByPosition(col, row).getDisplayText());
             }
             records.add(rowCells);
@@ -209,32 +204,44 @@ public class DomManagerImpl implements DomManager {
                 return col;
             }
         }
-        return table.getColumnCount()-1;
+        return table.getColumnCount() - 1;
     }
 
     public int findLastAttributePosition(String media) {
 
         OdfTable table;
         table = inputDocument.getTableByName(media);
-        
+
         for (int col = 0; col < table.getColumnCount() - 1; col++) {
             if (!table.getCellByPosition(col, 0).getDisplayText().equals("")
                     && table.getCellByPosition(col + 1, 0).getDisplayText().equals("")) {
                 return col;
             }
         }
-        return table.getColumnCount()-1;
+        return table.getColumnCount() - 1;
     }
-    
+
     public List<String> getMediaNames() {
-        
+
         List result = new ArrayList<String>();
-        
-        for(int i = 0; i < inputDocument.getTableList().size(); i++) {
+
+        for (int i = 0; i < inputDocument.getTableList().size(); i++) {
             result.add(inputDocument.getTableList().get(i).getTableName());
         }
-        
+
         return result;
-        
+
+    }
+
+    public List<String> listMediaTypes() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public String getRecord(String media, int id) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public List<String> listRecords(String media) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }
