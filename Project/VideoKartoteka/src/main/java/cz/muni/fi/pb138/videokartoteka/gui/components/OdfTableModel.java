@@ -1,6 +1,6 @@
 package cz.muni.fi.pb138.videokartoteka.gui.components;
 
-import cz.muni.fi.pb138.videodesgapps.dommanager.MediaType;
+import cz.muni.fi.pb138.videokartoteka.dommanager.MediaType;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.table.AbstractTableModel;
