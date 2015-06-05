@@ -7,6 +7,7 @@ package cz.muni.fi.pb138.videokartoteka.google;
 import com.google.api.client.http.FileContent;
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpResponse;
+import com.google.api.client.http.HttpResponseException;
 import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.Drive.Files;
 import com.google.api.services.drive.model.File;
@@ -24,19 +25,30 @@ import com.google.api.services.drive.model.ChildList;
 import com.google.api.services.drive.model.ChildReference;
 
 /**
- *
+ * Represents Google Drive services
+ * 
  * @author matus
  */
 public class GoogleDriveService {
 
     public static final String MIME_TYPE_SPREATSHEET_OO = "application/vnd.oasis.opendocument.spreadsheet";
     public static final String MIME_TYPE_FOLDER = "application/vnd.google-apps.folder";
-    Drive service;
+    // Google Drive service object
+    private final Drive service;
+    // Associated Google connection
+    private final GoogleConnection connection;
 
-    public GoogleDriveService(Drive service) {
+    public GoogleDriveService(GoogleConnection connection, Drive service) {
+        this.connection = connection;
         this.service = service;
     }
 
+    /**
+     * Returns list of all files that authenticated user has access to.
+     * 
+     * @return list of all files
+     * @throws IOException thrown if problem in communication with Google Drive appears
+     */
     public List<File> listFiles() throws IOException {
         List<File> result = new ArrayList<File>();
         Files.List request = service.files().list();
@@ -48,20 +60,48 @@ public class GoogleDriveService {
 
                 result.addAll(files.getItems());
                 request.setPageToken(files.getNextPageToken());
-            } catch (IOException ex) {
+            }
+            catch (HttpResponseException ex) {
+                // Authorization token expired
+                if (ex.getStatusCode() == 401 || ex.getStatusCode() == 403) {
+                    if (connection.refresh()) {
+                        result = listFiles();
+                    }
+                    else {
+                        return null;
+                    }
+                }
+            }
+            catch (IOException ex) {
                 Logger.getLogger(GoogleConnection.class.getName()).log(Level.SEVERE, null, ex);
                 request.setPageToken(null);
             }
-        } while (request.getPageToken() != null
+        }
+        while (request.getPageToken() != null
                 && request.getPageToken().length() > 0);
 
         return result;
     }
 
+    /**
+     * Returns list of all files in given folder that authenticated user has access to.
+     * 
+     * @param folder folder
+     * @return all files in the folder
+     * @throws IOException thrown if problem in communication with Google Drive appears
+     */
     public List<File> listFiles(File folder) throws IOException {
         return listFilesAndFolders(folder, null);
     }
 
+    /**
+     * Returns list of all files in given folder with given mime type that authenticated user has access to.
+     * 
+     * @param folder folder
+     * @param mimeType mime type
+     * @return list of all files in the folder with given mime type
+     * @throws IOException thrown if problem in communication with Google Drive appears
+     */
     public List<File> listFilesAndFolders(File folder, String mimeType) throws IOException {
         List<File> result = new ArrayList<File>();
         Children.List request = service.children().list(folder.getId());
@@ -82,6 +122,14 @@ public class GoogleDriveService {
                     result.add(getFile(child.getId()));
                 }
                 request.setPageToken(childern.getNextPageToken());
+             } catch (HttpResponseException ex) {
+                if (ex.getStatusCode() == 401 || ex.getStatusCode() == 403) {
+                    if (connection.refresh()) {
+                        result = listFilesAndFolders(folder, mimeType);
+                    } else {
+                        return null;
+                    }
+                }
             } catch (IOException e) {
                 System.out.println("An error occurred: " + e);
                 request.setPageToken(null);
@@ -92,6 +140,13 @@ public class GoogleDriveService {
         return result;
     }
 
+    /**
+     * Returns list of all files with given mime type that authenticated user has access to.
+     * 
+     * @param mimeType mime type of files to be returned
+     * @return all files with given mime type
+     * @throws IOException thrown if problem in communication with Google Drive appears
+     */
     public List<File> listFilesByMimeType(String mimeType) throws IOException {
         List<File> result = new ArrayList<File>();
         Files.List request = service.files().list();
@@ -103,6 +158,15 @@ public class GoogleDriveService {
 
                 result.addAll(files.getItems());
                 request.setPageToken(files.getNextPageToken());
+            } catch (HttpResponseException ex) {
+                // Authorization token expired
+                if (ex.getStatusCode() == 401 || ex.getStatusCode() == 403) {
+                    if (connection.refresh()) {
+                        result = listFilesByMimeType(mimeType);
+                    } else {
+                        return null;
+                    }
+                }
             } catch (IOException ex) {
                 Logger.getLogger(GoogleConnection.class.getName()).log(Level.SEVERE, null, ex);
                 request.setPageToken(null);
@@ -113,6 +177,12 @@ public class GoogleDriveService {
         return result;
     }
 
+    /**
+     * Creates a local copy of file saved at Google Drive.
+     * 
+     * @param file file at Google Drive to be downloaded
+     * @return local copy of the file
+     */
     public java.io.File downloadFile(File file) {
         java.io.File result = null;
         InputStream is = null;
@@ -126,6 +196,14 @@ public class GoogleDriveService {
                         .execute();
                 is = resp.getContent();
                 result = this.createTemporaryFile("GDriveFile", "tmp", is);
+             } catch (HttpResponseException ex) {
+                if (ex.getStatusCode() == 401 || ex.getStatusCode() == 403) {
+                    if (connection.refresh()) {
+                        result = downloadFile(file);
+                    } else {
+                        return null;
+                    }
+                }
             } catch (IOException ex) {
                 // An error occurred.
                 Logger.getLogger(GoogleConnection.class.getName()).log(Level.SEVERE, null, ex);
@@ -144,6 +222,13 @@ public class GoogleDriveService {
         return result;
     }
 
+    /**
+     * Saves local file to Google Drive. <em>Creates a new file.</em>
+     * 
+     * @param file Google metadata of the file
+     * @param content actual file to be saved
+     * @return updated file reference to file saved at Google Drive
+     */
     public File saveFile(File file, java.io.File content) {
         // Content
         FileContent fileContent = new FileContent(file.getMimeType(), content);
@@ -151,6 +236,14 @@ public class GoogleDriveService {
 
         try {
             savedFile = service.files().insert(file, fileContent).execute();
+         } catch (HttpResponseException ex) {
+            if (ex.getStatusCode() == 401 || ex.getStatusCode() == 403) {
+                if (connection.refresh()) {
+                    savedFile = saveFile(file, content);
+                } else {
+                    return null;
+                }
+            }
         } catch (IOException ex) {
             Logger.getLogger(GoogleConnection.class.getName()).log(Level.SEVERE, null, ex);
             savedFile = null;
@@ -159,6 +252,15 @@ public class GoogleDriveService {
         return savedFile;
     }
 
+    /**
+     * Saves local file to Google Drive. <em>Creates a new file.</em>
+     * 
+     * @param name name of the file with extension
+     * @param description description of the file
+     * @param mimeType mime type of the file
+     * @param content actual file to be saved
+     * @return updated file reference to file saved at Google Drive
+     */
     public File saveFile(String name, String description, String mimeType, java.io.File content) {
         // Metadata
         File file = new File();
@@ -172,6 +274,14 @@ public class GoogleDriveService {
 
         try {
             savedFile = service.files().insert(file, fileContent).execute();
+        } catch (HttpResponseException ex) {
+            if (ex.getStatusCode() == 401 || ex.getStatusCode() == 403) {
+                if (connection.refresh()) {
+                    savedFile = saveFile(name, description, mimeType, content);
+                } else {
+                    return null;
+                }
+            }
         } catch (IOException ex) {
             Logger.getLogger(GoogleConnection.class.getName()).log(Level.SEVERE, null, ex);
             savedFile = null;
@@ -180,6 +290,13 @@ public class GoogleDriveService {
         return savedFile;
     }
 
+    /**
+     * Saves local file to Google Drive. <em>Updates existing file.</em>
+     * 
+     * @param file Google metadata of the file
+     * @param content actual file to be saved
+     * @return updated file reference to file saved at Google Drive
+     */
     public File updateFile(File file, java.io.File content) {
         File updatedFile = null;
 
@@ -188,6 +305,14 @@ public class GoogleDriveService {
 
         try {
             updatedFile = service.files().update(file.getId(), file, fileContent).execute();
+        } catch (HttpResponseException ex) {
+            if (ex.getStatusCode() == 401 || ex.getStatusCode() == 403) {
+                if (connection.refresh()) {
+                    updatedFile = updateFile(file, content);
+                } else {
+                    return null;
+                }
+            }
         } catch (IOException ex) {
             Logger.getLogger(GoogleConnection.class.getName()).log(Level.SEVERE, null, ex);
             updatedFile = null;
@@ -196,6 +321,12 @@ public class GoogleDriveService {
         return updatedFile;
     }
 
+    /**
+     * Returns true if the file reference points to a folder.
+     * 
+     * @param file Google file metadata
+     * @return true if the file reference points to a folder.
+     */
     private java.io.File createTemporaryFile(String name, String extension, InputStream is) throws IOException {
         java.io.File result = java.io.File.createTempFile(name, extension);
         OutputStream os;

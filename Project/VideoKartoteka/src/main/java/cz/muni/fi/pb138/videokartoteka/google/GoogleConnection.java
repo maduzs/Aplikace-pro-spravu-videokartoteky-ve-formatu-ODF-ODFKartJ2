@@ -14,31 +14,27 @@ import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson.JacksonFactory;
 import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.DriveScopes;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
+ * Represents unique connection to Google account
+ * 
  * @author matus
  */
 public class GoogleConnection {
 
-    static {
-        CLIENT_ID = "200863197931.apps.googleusercontent.com";
-        CLIENT_SECRET = "aKKa4YGHM-YsJkZvzpxpE8wM";
-        REDIRECT_URI = "urn:ietf:wg:oauth:2.0:oob";
-
-        connection = new GoogleConnection();
-    }
-    private static GoogleConnection connection;
-    private static String CLIENT_ID;
-    private static String CLIENT_SECRET;
-    private static String REDIRECT_URI;
-    private HttpTransport httpTransport;
-    private JsonFactory jsonFactory;
-    private GoogleAuthorizationCodeFlow flow;
-    private String url;
+    // Application specific conection data
+    private static final String CLIENT_ID = "200863197931.apps.googleusercontent.com";
+    private static final String CLIENT_SECRET = "aKKa4YGHM-YsJkZvzpxpE8wM";
+    private static final String REDIRECT_URI= "urn:ietf:wg:oauth:2.0:oob";
+    // private fields
+    private final HttpTransport httpTransport;
+    private final JsonFactory jsonFactory;
+    private final GoogleAuthorizationCodeFlow flow;
+    private final String url;
     private GoogleTokenResponse response;
     private GoogleCredential credential;
     private Drive service;
@@ -58,18 +54,30 @@ public class GoogleConnection {
         connected = false;
     }
 
-    public static GoogleConnection getConnection() {
-        return connection;
-    }
-
-    public String getAuthentizationUrl() {
+    /**
+     * Returns URL to OAuth 2 authorization service
+     * 
+     * @return URL to OAuth 2 authorization service
+     */
+    public String getAuthorizationUrl() {
         return this.url;
     }
 
+    /**
+     * Returns whether the connection to Google account was established.
+     * 
+     * @return true if connection is established. false otherwise.
+     */
     public boolean isConnected() {
         return this.connected;
     }
 
+    /**
+     * Tries to establish a connection to Google account specified by given code.
+     * 
+     * @param code authorization code.
+     * @return true if successfully connected. false otherwise
+     */
     public boolean connect(String code) {
         boolean result = true;
 
@@ -80,7 +88,7 @@ public class GoogleConnection {
         } catch (com.google.api.client.auth.oauth2.TokenResponseException ex) {
             Logger.getLogger(GoogleConnection.class.getName()).log(Level.SEVERE, null, ex);
             result = false;
-        } catch (Exception ex) {
+        } catch (IOException ex) {
             Logger.getLogger(GoogleConnection.class.getName()).log(Level.SEVERE, null, ex);
             result = false;
         }
@@ -88,8 +96,13 @@ public class GoogleConnection {
         return result;
     }
 
+    /**
+     * Builds instance of GoogleDriveService associated with this connection.
+     * 
+     * @return GoogleDriveService instance.
+     */
     public GoogleDriveService buildService() {
-        if (credential == null) {
+        if (!connected || credential == null) {
             return null;
         }
         if (service == null) {
@@ -98,9 +111,29 @@ public class GoogleConnection {
                     .build();
         }
 
-        return new GoogleDriveService(service);
+        return new GoogleDriveService(this, service);
+    }
+    
+    /**
+     * Refreshes authorization token, after it expires.
+     * 
+     * @return true if authorization token was successfully refreshed. false otherwise.
+     */
+    public boolean refresh() {
+        boolean result = false;
+        if (credential != null) {
+            try {
+                credential.refreshToken();
+                result = true;
+            } catch (IOException ex) {
+                Logger.getLogger(GoogleConnection.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        return result;
     }
 
     public void close() {
+        this.connected = false;
     }
 }
