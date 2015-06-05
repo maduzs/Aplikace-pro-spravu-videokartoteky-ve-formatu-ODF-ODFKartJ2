@@ -139,7 +139,9 @@ public class DomManagerImpl implements DomManager {
 
     }
 
-    public void loadTableToMediaType(String media, MediaType type) {
+    public MediaType loadTableToMediaType(String media) {
+        MediaType type = new MediaType();
+        
         List attributes = new ArrayList<String>();
         List records = new ArrayList<ArrayList<String>>();
 
@@ -163,7 +165,8 @@ public class DomManagerImpl implements DomManager {
 
         type.setAttributes(attributes);
         type.setRecords(records);
-
+        
+        return type;
     }
 
     public int findFirstEmptyRow(String media) {
@@ -244,4 +247,5 @@ public class DomManagerImpl implements DomManager {
     public List<String> listRecords(String media) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+
 }

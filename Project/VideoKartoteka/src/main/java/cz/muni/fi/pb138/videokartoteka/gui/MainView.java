@@ -9,6 +9,7 @@ import cz.muni.fi.pb138.videokartoteka.google.GoogleConnection;
 import cz.muni.fi.pb138.videokartoteka.google.GoogleDriveService;
 import cz.muni.fi.pb138.videokartoteka.dommanager.DomManagerImpl;
 import cz.muni.fi.pb138.videokartoteka.dommanager.MediaType;
+import cz.muni.fi.pb138.videokartoteka.gui.components.OdfTableModel;
 import java.awt.Color;
 import cz.muni.fi.pb138.videokartoteka.dommanager.DomManager;
 import java.beans.PropertyChangeEvent;
@@ -26,6 +27,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.DefaultListModel;
+import java.util.ArrayList;
+import java.util.List;
+import javax.swing.ListModel;
 
 /**
  *
@@ -479,8 +483,15 @@ public class MainView extends javax.swing.JFrame {
 
         searchTF.setEnabled(selected);
         addRecordButton.setEnabled(selected);
-        editRecordButton.setEnabled(selected);
-        deleteRecordButton.setEnabled(selected);
+        editRecordButton.setEnabled(editRecordButton.isEnabled() && selected);
+        deleteRecordButton.setEnabled(deleteRecordButton.isEnabled() && selected);
+
+        OdfTableModel tableModel = new OdfTableModel();
+
+        MediaType mediaType = manager.loadTableToMediaType(categoriesList.getSelectedValue().toString());
+        tableModel.setMediaType(mediaType);
+
+        recordsTable.setModel(tableModel);
     }//GEN-LAST:event_categoriesListValueChanged
 
     private void addRecordButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addRecordButtonActionPerformed
