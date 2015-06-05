@@ -30,6 +30,11 @@ import javax.swing.DefaultListModel;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.ListModel;
+import com.google.api.services.drive.model.ParentReference;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.Arrays;
+import java.util.Collections;
 
 /**
  *
@@ -40,6 +45,7 @@ public class MainView extends javax.swing.JFrame {
     private GoogleConnection gc;
     private GoogleDriveService service;
     private DomManagerImpl manager;
+    private File actualFile;
 
     /**
      * Creates new form MainView
@@ -433,12 +439,68 @@ public class MainView extends javax.swing.JFrame {
     }//GEN-LAST:event_connectButtonActionPerformed
 
     private void disconnectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_disconnectButtonActionPerformed
+        gc.close();
+        gc = null;
 
+        categoriesList.clearSelection();
+        categoriesList.setListData(new Object[]{});
+
+        connectionStateLabel.setText("<html><b>Nejste připojeni</b></html>");
+        connectionStateLabel.setForeground(Color.RED);
+
+        java.awt.GridBagConstraints gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        jPanel1.remove(connectedPanel);
+        jPanel1.add(disconnectedPanel, gridBagConstraints);
+        jPanel1.repaint();
+
+        // Enabling menu items
+        connectMenuItem.setEnabled(true);
+        openFileMenuItem.setEnabled(false);
+        saveFileMenuItem.setEnabled(false);
+        saveFileAsMenuItem.setEnabled(false);
+        disconnectMenuItem.setEnabled(false);
     }//GEN-LAST:event_disconnectButtonActionPerformed
 
 
     private void openFileButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openFileButtonActionPerformed
+        GoogleFileChooserDialog fileChooser = new GoogleFileChooserDialog(this, true, service);
+        int result = fileChooser.showOpenDialog();
 
+        if (result == GoogleFileChooserDialog.RESULT_OK) {
+            File file = fileChooser.getSelectedFile();
+
+            DownloadFileTask task = new DownloadFileTask(service, file);
+            task.addPropertyChangeListener(
+                    new PropertyChangeListener() {
+                        public void propertyChange(PropertyChangeEvent evt) {
+                            if ("state".equals(evt.getPropertyName())) {
+                                String value = evt.getNewValue().toString();
+                                if (value.equals(SwingWorker.StateValue.STARTED)) {
+                                    progressBar.setValue(10);
+                                }
+                                if (value.equals(SwingWorker.StateValue.DONE)) {
+                                    progressBar.setValue(0);
+                                }
+                            }
+                        }
+                    });
+
+            task.execute();
+
+            for (ActionListener listener : openFileButton.getActionListeners()) {
+                openFileButton.removeActionListener(listener);
+            }
+
+            openFileButton.setText("Uložit");
+            openFileButton.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    saveFileButtonActionPerformed(e);
+                }
+            });
+        }
     }//GEN-LAST:event_openFileButtonActionPerformed
 
     private void recordsTableValueChanged(javax.swing.event.ListSelectionEvent evt) {
@@ -450,11 +512,81 @@ public class MainView extends javax.swing.JFrame {
 
 
     private void saveFileButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveFileButtonActionPerformed
+        SwingWorker task;
 
+        // Content
+        java.io.File content = manager.saveSpreadSheet();
+
+        task = new SaveFileTask(service, actualFile, content);
+
+        task.addPropertyChangeListener(
+                new PropertyChangeListener() {
+                    public void propertyChange(PropertyChangeEvent evt) {
+                        if ("state".equals(evt.getPropertyName())) {
+                            String value = evt.getNewValue().toString();
+                            if (value.equals(SwingWorker.StateValue.STARTED)) {
+                                progressBar.setValue(10);
+                            }
+                            if (value.equals(SwingWorker.StateValue.DONE)) {
+                                progressBar.setValue(0);
+                            }
+                        }
+                    }
+                });
+
+        task.execute();
     }//GEN-LAST:event_saveFileButtonActionPerformed
 
     private void saveAsFileButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveAsFileButtonActionPerformed
+        GoogleFileChooserDialog fileChooser = new GoogleFileChooserDialog(this, true, service);
+        int result = fileChooser.showSaveDialog();
 
+        SwingWorker task;
+        if (result == GoogleFileChooserDialog.RESULT_OK) {
+            File file = fileChooser.getSelectedFile();
+
+            if (service.isFolder(file)) {
+                // Folder selected. Need to get name of the new file from the text field
+                String name = fileChooser.getInsertedFileName();
+                if (!name.endsWith(".ods")) {
+                    name += ".ods";
+                }
+
+                File newFile = new File();
+                newFile.setTitle(name);
+                newFile.setDescription(actualFile.getDescription());
+                newFile.setMimeType(actualFile.getMimeType());
+                ParentReference parent = new ParentReference();
+                parent.setId(file.getId());
+                newFile.setParents(Collections.singletonList(parent));
+
+                // Content
+                java.io.File content = manager.saveSpreadSheet();
+
+                task = new SaveNewFileTask(service, newFile, content);
+            } else {
+                // Content
+                java.io.File content = manager.saveSpreadSheet();
+
+                task = new SaveFileTask(service, file, content);
+            }
+            task.addPropertyChangeListener(
+                    new PropertyChangeListener() {
+                        public void propertyChange(PropertyChangeEvent evt) {
+                            if ("state".equals(evt.getPropertyName())) {
+                                String value = evt.getNewValue().toString();
+                                if (value.equals(SwingWorker.StateValue.STARTED)) {
+                                    progressBar.setValue(10);
+                                }
+                                if (value.equals(SwingWorker.StateValue.DONE)) {
+                                    progressBar.setValue(0);
+                                }
+                            }
+                        }
+                    });
+
+            task.execute();
+        }
     }//GEN-LAST:event_saveAsFileButtonActionPerformed
 
     private void exitMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitMenuItemActionPerformed
@@ -467,13 +599,15 @@ public class MainView extends javax.swing.JFrame {
         DefaultListModel model = (DefaultListModel) categoriesList.getModel();
 
         model.addElement(type.getName());
+
     }//GEN-LAST:event_addCategoryButtonActionPerformed
 
     private void deleteCategoryButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteCategoryButtonActionPerformed
         manager.deleteMediaType(categoriesList.getSelectedValue().toString());
         DefaultListModel model = (DefaultListModel) categoriesList.getModel();
 
-        model.remove(categoriesList.getSelectedIndex());
+        int index = categoriesList.getSelectedIndex();
+        model.remove(index);
     }//GEN-LAST:event_deleteCategoryButtonActionPerformed
 
     private void categoriesListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_categoriesListValueChanged
@@ -486,16 +620,21 @@ public class MainView extends javax.swing.JFrame {
         editRecordButton.setEnabled(editRecordButton.isEnabled() && selected);
         deleteRecordButton.setEnabled(deleteRecordButton.isEnabled() && selected);
 
-        OdfTableModel tableModel = new OdfTableModel();
+        if (selected) {
+            OdfTableModel tableModel = new OdfTableModel();
 
-        MediaType mediaType = manager.loadTableToMediaType(categoriesList.getSelectedValue().toString());
-        tableModel.setMediaType(mediaType);
-
-        recordsTable.setModel(tableModel);
+            MediaType mediaType = manager.loadTableToMediaType(categoriesList.getSelectedValue().toString());
+            tableModel.setMediaType(mediaType);
+            recordsTable.setModel(tableModel);
+        }
     }//GEN-LAST:event_categoriesListValueChanged
 
     private void addRecordButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addRecordButtonActionPerformed
-
+        OdfTableModel model = (OdfTableModel)recordsTable.getModel();
+        List record = Dialogs.newRecordDialog(model.getMediaType());
+        
+        model.fireInserted();;
+        manager.addRecord(categoriesList.getSelectedValue().toString(), record);
     }//GEN-LAST:event_addRecordButtonActionPerformed
 
     private void editRecordButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editRecordButtonActionPerformed
@@ -503,7 +642,11 @@ public class MainView extends javax.swing.JFrame {
     }//GEN-LAST:event_editRecordButtonActionPerformed
 
     private void deleteRecordButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteRecordButtonActionPerformed
-
+OdfTableModel model = (OdfTableModel)recordsTable.getModel();
+        manager.deleteRecord(categoriesList.getSelectedValue().toString(), recordsTable.getSelectedRow() );
+        model.getMediaType().getRecords().remove(recordsTable.getSelectedRow());
+        
+        model.fireDeleted(recordsTable.getSelectedRow());
     }//GEN-LAST:event_deleteRecordButtonActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -553,6 +696,7 @@ public class MainView extends javax.swing.JFrame {
     public static Image getImage(final String pathAndFileName) {
         final URL url = Thread.currentThread().getContextClassLoader().getResource(pathAndFileName);
         return Toolkit.getDefaultToolkit().getImage(url);
+
     }
 
     private class DownloadFileTask extends SwingWorker<java.io.File, Integer> {
@@ -575,6 +719,7 @@ public class MainView extends javax.swing.JFrame {
             //backgroundActionTF.setText("Soubor stáhnut");
             try {
                 java.io.File downloadedFile = this.get();
+                actualFile = fileToDownload;
                 manager = new DomManagerImpl(downloadedFile);
 
                 DefaultListModel model = new DefaultListModel();
@@ -587,6 +732,80 @@ public class MainView extends javax.swing.JFrame {
             } catch (ExecutionException ex) {
                 Logger.getLogger(MainView.class.getName()).log(Level.SEVERE, null, ex);
                 JOptionPane.showMessageDialog(rootPane, "Chyba při otevírání souboru", "Chyba", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }
+
+    private class SaveFileTask extends SwingWorker<File, Integer> {
+
+        private File fileToSave;
+        private java.io.File content;
+        private GoogleDriveService service;
+
+        public SaveFileTask(GoogleDriveService service, File file, java.io.File content) {
+            this.service = service;
+            this.fileToSave = file;
+            this.content = content;
+        }
+
+        @Override
+        protected File doInBackground() throws Exception {
+            return service.updateFile(fileToSave, content);
+        }
+
+        @Override
+        protected void done() {
+            try {
+                File updatedFile = this.get();
+
+                if (updatedFile == null) {
+                    JOptionPane.showMessageDialog(rootPane, "Chyba při ukládání souboru", "Chyba", JOptionPane.ERROR_MESSAGE);
+                } else {
+                    actualFile = updatedFile;
+                }
+            } catch (InterruptedException ex) {
+                Logger.getLogger(MainView.class.getName()).log(Level.SEVERE, null, ex);
+                JOptionPane.showMessageDialog(rootPane, "Chyba při ukládání souboru", "Chyba", JOptionPane.ERROR_MESSAGE);
+            } catch (ExecutionException ex) {
+                Logger.getLogger(MainView.class.getName()).log(Level.SEVERE, null, ex);
+                JOptionPane.showMessageDialog(rootPane, "Chyba při ukládání souboru", "Chyba", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }
+
+    private class SaveNewFileTask extends SwingWorker<File, Integer> {
+
+        private File fileToSave;
+        private java.io.File content;
+        private GoogleDriveService service;
+
+        public SaveNewFileTask(GoogleDriveService service, File file, java.io.File content) {
+            this.service = service;
+            this.fileToSave = file;
+            this.content = content;
+        }
+
+        @Override
+        protected File doInBackground() throws Exception {
+            return service.saveFile(fileToSave, content);
+        }
+
+        @Override
+        protected void done() {
+            try {
+                File updatedFile = this.get();
+
+                if (updatedFile == null) {
+                    JOptionPane.showMessageDialog(rootPane, "Chyba při ukládání souboru", "Chyba", JOptionPane.ERROR_MESSAGE);
+                } else {
+                    actualFile = updatedFile;
+                }
+            } catch (InterruptedException ex) {
+                Logger.getLogger(MainView.class.getName()).log(Level.SEVERE, null, ex);
+                JOptionPane.showMessageDialog(rootPane, "Chyba při ukládání souboru", "Chyba", JOptionPane.ERROR_MESSAGE);
+            } catch (ExecutionException ex) {
+                Logger.getLogger(MainView.class.getName()).log(Level.SEVERE, null, ex);
+                JOptionPane.showMessageDialog(rootPane, "Chyba při ukládání souboru", "Chyba", JOptionPane.ERROR_MESSAGE);
             }
         }
     }

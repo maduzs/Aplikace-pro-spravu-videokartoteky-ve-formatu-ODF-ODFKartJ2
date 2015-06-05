@@ -7,6 +7,7 @@ import java.util.logging.Logger;
 import org.odftoolkit.odfdom.doc.OdfSpreadsheetDocument;
 import org.odftoolkit.odfdom.doc.table.OdfTable;
 import org.odftoolkit.odfdom.doc.table.OdfTableCell;
+import java.io.File;
 
 /**
  *
@@ -15,6 +16,7 @@ import org.odftoolkit.odfdom.doc.table.OdfTableCell;
 public class DomManagerImpl implements DomManager {
 
     private OdfSpreadsheetDocument inputDocument;
+    private java.io.File file;
 
     public DomManagerImpl(OdfSpreadsheetDocument inputDocument) {
         this.inputDocument = inputDocument;
@@ -141,7 +143,7 @@ public class DomManagerImpl implements DomManager {
 
     public MediaType loadTableToMediaType(String media) {
         MediaType type = new MediaType();
-        
+
         List attributes = new ArrayList<String>();
         List records = new ArrayList<ArrayList<String>>();
 
@@ -151,6 +153,8 @@ public class DomManagerImpl implements DomManager {
         int firstColumn = this.findFirstAttributePosition(media);
         int lastColumn = this.findLastAttributePosition(media);
 
+        String controlStr = "";
+
         for (int col = firstColumn; col < lastColumn + 1; col++) {
             attributes.add(table.getCellByPosition(col, 0).getDisplayText());
         }
@@ -159,13 +163,17 @@ public class DomManagerImpl implements DomManager {
             List rowCells = new ArrayList<String>();
             for (int col = firstColumn; col < lastColumn + 1; col++) {
                 rowCells.add(table.getCellByPosition(col, row).getDisplayText());
+                controlStr += table.getCellByPosition(col, row).getDisplayText();
             }
-            records.add(rowCells);
+            if (!controlStr.equals("")) {
+                records.add(rowCells);
+            }
+            controlStr = "";
         }
 
         type.setAttributes(attributes);
         type.setRecords(records);
-        
+
         return type;
     }
 
@@ -234,6 +242,16 @@ public class DomManagerImpl implements DomManager {
 
         return result;
 
+    }
+
+    public java.io.File saveSpreadSheet() {
+        try {
+            inputDocument.save(file);
+            return file;
+        } catch (Exception ex) {
+            Logger.getLogger(DomManagerImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return file;
     }
 
     public List<String> listMediaTypes() {

@@ -34,7 +34,7 @@ public class GoogleFileChooserDialog extends javax.swing.JDialog {
     public int showOpenDialog() {
         okButton.setText("Otevřít");
         pathTF.setEnabled(false);
-        
+
         setVisible(true);
 
         return result;
@@ -43,24 +43,24 @@ public class GoogleFileChooserDialog extends javax.swing.JDialog {
     public int showSaveDialog() {
         okButton.setText("Uložit");
         pathTF.setEnabled(true);
-        
+
         setVisible(true);
 
         return result;
     }
-    
+
     public File getSelectedFile() {
         File result = null;
         Object selectedObject = jTree1.getSelectionPath().getLastPathComponent();
         if (selectedObject != null && selectedObject instanceof File) {
-            result = (File)selectedObject;
+            result = (File) selectedObject;
         }
-        
+
         return result;
     }
-    
-    public String getInsertedFilePath() {
-        return pathTF.getSelectedText();
+
+    public String getInsertedFileName() {
+        return pathTF.getText();
     }
 
     /**
@@ -146,7 +146,6 @@ public class GoogleFileChooserDialog extends javax.swing.JDialog {
         StringBuilder sb = new StringBuilder();
         File file;
 
-
         Object partOfPath = evt.getPath().getLastPathComponent();
         if (partOfPath instanceof File) {
             file = (File) partOfPath;
@@ -155,7 +154,7 @@ public class GoogleFileChooserDialog extends javax.swing.JDialog {
             }
         }
 
-        
+
     }//GEN-LAST:event_jTree1ValueChanged
 
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
@@ -183,4 +182,5 @@ public class GoogleFileChooserDialog extends javax.swing.JDialog {
     private javax.swing.JButton okButton;
     private javax.swing.JTextField pathTF;
     // End of variables declaration//GEN-END:variables
+
 }
