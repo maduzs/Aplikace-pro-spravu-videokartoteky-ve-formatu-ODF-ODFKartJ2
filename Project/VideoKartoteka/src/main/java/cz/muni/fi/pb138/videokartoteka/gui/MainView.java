@@ -1,44 +1,37 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package cz.muni.fi.pb138.videokartoteka.gui;
 
 import com.google.api.services.drive.model.File;
-import cz.muni.fi.pb138.videokartoteka.google.GoogleConnection;
-import cz.muni.fi.pb138.videokartoteka.google.GoogleDriveService;
+import com.google.api.services.drive.model.ParentReference;
+import cz.muni.fi.pb138.videokartoteka.dommanager.DomManager;
 import cz.muni.fi.pb138.videokartoteka.dommanager.DomManagerImpl;
 import cz.muni.fi.pb138.videokartoteka.dommanager.MediaType;
+import cz.muni.fi.pb138.videokartoteka.google.GoogleConnection;
+import cz.muni.fi.pb138.videokartoteka.google.GoogleDriveService;
 import cz.muni.fi.pb138.videokartoteka.gui.components.OdfTableModel;
 import java.awt.Color;
-import cz.muni.fi.pb138.videokartoteka.dommanager.DomManager;
+import java.awt.Desktop;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.concurrent.ExecutionException;
-import javax.swing.SwingWorker;
-import java.awt.Desktop;
-import java.awt.Image;
-import java.awt.Toolkit;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URL;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.JOptionPane;
-import javax.swing.DefaultListModel;
 import java.util.ArrayList;
-import java.util.List;
-import javax.swing.ListModel;
-import com.google.api.services.drive.model.ParentReference;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.DefaultListModel;
+import javax.swing.JOptionPane;
+import javax.swing.ListModel;
+import javax.swing.SwingWorker;
 
 /**
  *
- * @author matus
+ * @author Michal
  */
 public class MainView extends javax.swing.JFrame {
 
@@ -62,19 +55,21 @@ public class MainView extends javax.swing.JFrame {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
+        java.awt.GridBagConstraints gridBagConstraints;
 
         connectedPanel = new javax.swing.JPanel();
         disconnectButton = new javax.swing.JButton();
         openFileButton = new javax.swing.JButton();
         statusBar = new javax.swing.JPanel();
         progressBar = new javax.swing.JProgressBar();
-        statusLabel = new javax.swing.JLabel();
+        backgroundActionTF = new javax.swing.JLabel();
         quickMenuBar = new javax.swing.JPanel();
+        jButton1 = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         connectionStateLabel = new javax.swing.JLabel();
-        disconnectedPanel = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
+        disconnectedPanel = new javax.swing.JPanel();
         connectButton = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         jPanel2 = new javax.swing.JPanel();
@@ -85,14 +80,13 @@ public class MainView extends javax.swing.JFrame {
         addCategoryButton = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         jPanel3 = new javax.swing.JPanel();
+        jLabel4 = new javax.swing.JLabel();
+        searchTF = new javax.swing.JTextField();
         jScrollPane4 = new javax.swing.JScrollPane();
         recordsTable = new javax.swing.JTable();
         deleteRecordButton = new javax.swing.JButton();
         editRecordButton = new javax.swing.JButton();
         addRecordButton = new javax.swing.JButton();
-        searchLabel = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
-        searchTF = new javax.swing.JTextField();
         menuBar = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         connectMenuItem = new javax.swing.JMenuItem();
@@ -138,7 +132,6 @@ public class MainView extends javax.swing.JFrame {
         );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("VideoDesGApps");
         setAutoRequestFocus(false);
 
         statusBar.setBorder(javax.swing.BorderFactory.createEtchedBorder());
@@ -149,7 +142,7 @@ public class MainView extends javax.swing.JFrame {
             statusBarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, statusBarLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(statusLabel)
+                .addComponent(backgroundActionTF)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(progressBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
@@ -159,40 +152,51 @@ public class MainView extends javax.swing.JFrame {
             .addComponent(progressBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(statusBarLayout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(statusLabel))
+                .addComponent(backgroundActionTF))
         );
 
         quickMenuBar.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+
+        jButton1.setText("jButton1");
 
         javax.swing.GroupLayout quickMenuBarLayout = new javax.swing.GroupLayout(quickMenuBar);
         quickMenuBar.setLayout(quickMenuBarLayout);
         quickMenuBarLayout.setHorizontalGroup(
             quickMenuBarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addGroup(quickMenuBarLayout.createSequentialGroup()
+                .addComponent(jButton1)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         quickMenuBarLayout.setVerticalGroup(
             quickMenuBarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 23, Short.MAX_VALUE)
+            .addComponent(jButton1)
         );
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
         jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        jPanel1.setLayout(new java.awt.GridLayout());
-
-        jLabel1.setIcon(new javax.swing.ImageIcon(getImage("Google_Logo.png")));
-        jPanel1.add(jLabel1);
+        jPanel1.setLayout(new java.awt.GridBagLayout());
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        jPanel1.add(jLabel1, gridBagConstraints);
 
         connectionStateLabel.setForeground(java.awt.Color.RED);
         connectionStateLabel.setText("<html><b>Nejste připojeni</b></html>");
-        jPanel1.add(connectionStateLabel);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.insets = new java.awt.Insets(5, 0, 0, 0);
+        jPanel1.add(connectionStateLabel, gridBagConstraints);
+
+        jLabel3.setText("ke svému účtu Google");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
+        jPanel1.add(jLabel3, gridBagConstraints);
 
         disconnectedPanel.setBackground(new java.awt.Color(255, 255, 255));
         disconnectedPanel.setLayout(new java.awt.GridBagLayout());
-
-        jLabel3.setText("ke svému účtu Google");
-        disconnectedPanel.add(jLabel3, new java.awt.GridBagConstraints());
-
-        jPanel1.add(disconnectedPanel);
 
         connectButton.setText("Připojit");
         connectButton.addActionListener(new java.awt.event.ActionListener() {
@@ -200,7 +204,12 @@ public class MainView extends javax.swing.JFrame {
                 connectButtonActionPerformed(evt);
             }
         });
-        jPanel1.add(connectButton);
+        disconnectedPanel.add(connectButton, new java.awt.GridBagConstraints());
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 3;
+        jPanel1.add(disconnectedPanel, gridBagConstraints);
 
         jLabel2.setText("Kategorie:");
 
@@ -212,7 +221,7 @@ public class MainView extends javax.swing.JFrame {
         });
         jScrollPane3.setViewportView(categoriesList);
 
-        deleteCategoryButton.setText("Delete");
+        deleteCategoryButton.setText("Smazat");
         deleteCategoryButton.setEnabled(false);
         deleteCategoryButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -220,8 +229,7 @@ public class MainView extends javax.swing.JFrame {
             }
         });
 
-        addCategoryButton.setText("Add");
-        addCategoryButton.setEnabled(false);
+        addCategoryButton.setText("Přidat");
         addCategoryButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 addCategoryButtonActionPerformed(evt);
@@ -235,13 +243,14 @@ public class MainView extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel2)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(addCategoryButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(deleteCategoryButton)))
-                .addContainerGap(28, Short.MAX_VALUE))
+                        .addComponent(deleteCategoryButton))
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 181, Short.MAX_VALUE)
+                    .addComponent(jLabel2))
+                .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -249,15 +258,19 @@ public class MainView extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 278, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 191, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(addCategoryButton)
-                    .addComponent(deleteCategoryButton))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(deleteCategoryButton)
+                    .addComponent(addCategoryButton))
+                .addContainerGap())
         );
 
         jScrollPane1.setViewportView(jPanel2);
+
+        jLabel4.setText("Hledání:");
+
+        searchTF.setEnabled(false);
 
         recordsTable.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         recordsTable.getSelectionModel().addListSelectionListener(new javax.swing.event.ListSelectionListener() {
@@ -267,7 +280,7 @@ public class MainView extends javax.swing.JFrame {
         });
         jScrollPane4.setViewportView(recordsTable);
 
-        deleteRecordButton.setText("Delete");
+        deleteRecordButton.setText("Smazat");
         deleteRecordButton.setEnabled(false);
         deleteRecordButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -275,15 +288,10 @@ public class MainView extends javax.swing.JFrame {
             }
         });
 
-        editRecordButton.setText("Edit");
+        editRecordButton.setText("Změnit");
         editRecordButton.setEnabled(false);
-        editRecordButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                editRecordButtonActionPerformed(evt);
-            }
-        });
 
-        addRecordButton.setText("Add");
+        addRecordButton.setText("Přidat");
         addRecordButton.setEnabled(false);
         addRecordButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -296,41 +304,40 @@ public class MainView extends javax.swing.JFrame {
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGap(325, 325, 325)
-                .addComponent(searchLabel)
-                .addContainerGap(165, Short.MAX_VALUE))
-            .addComponent(jScrollPane4)
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addComponent(addRecordButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(editRecordButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(deleteRecordButton)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addContainerGap()
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane4)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                        .addGap(0, 257, Short.MAX_VALUE)
+                        .addComponent(addRecordButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(editRecordButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(deleteRecordButton))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addComponent(jLabel4)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(searchTF)))
+                .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(searchLabel)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel4)
+                    .addComponent(searchTF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 291, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 343, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(deleteRecordButton)
                     .addComponent(editRecordButton)
                     .addComponent(addRecordButton))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
-        searchLabel.getAccessibleContext().setAccessibleName("resultsLabel");
-
         jScrollPane2.setViewportView(jPanel3);
-
-        jLabel4.setText("Hledání:");
-
-        searchTF.setEnabled(false);
-        searchTF.setName(""); // NOI18N
 
         jMenu1.setText("Soubor");
 
@@ -381,11 +388,6 @@ public class MainView extends javax.swing.JFrame {
         jMenu1.add(disconnectMenuItem);
 
         exitMenuItem.setText("Konec");
-        exitMenuItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                exitMenuItemActionPerformed(evt);
-            }
-        });
         jMenu1.add(exitMenuItem);
 
         menuBar.add(jMenu1);
@@ -400,34 +402,26 @@ public class MainView extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(statusBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(quickMenuBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jScrollPane2)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel4)
-                    .addComponent(searchTF, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(17, Short.MAX_VALUE))
-            .addComponent(quickMenuBar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jScrollPane2))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addComponent(quickMenuBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel4)
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(searchTF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jScrollPane1))
+                    .addComponent(jScrollPane2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jScrollPane2)
-                    .addComponent(jScrollPane1))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 22, Short.MAX_VALUE)
                 .addComponent(statusBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
@@ -435,7 +429,68 @@ public class MainView extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void connectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_connectButtonActionPerformed
+        if (gc == null) {
+            gc = new GoogleConnection();
+        }
+        GoogleConnectionDialog gcd = new GoogleConnectionDialog(this, true);
+        gcd.setConnectionUrl(gc.getAuthentizationUrl());
 
+        if (Desktop.isDesktopSupported()) {
+            try {
+                Desktop.getDesktop().browse(new URI(gc.getAuthentizationUrl()));
+            } catch (IOException ex) {
+                Logger.getLogger(MainView.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (URISyntaxException ex) {
+                Logger.getLogger(MainView.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        int result = gcd.showDialog();
+
+        if (result == GoogleConnectionDialog.OK_OPTION) {
+            try {
+                gc.connect(gcd.getCode());
+                if (gc.isConnected()) {
+                    service = gc.buildService();
+
+                    connectionStateLabel.setText("<html><b>Jste připojeni</b></html>");
+                    connectionStateLabel.setForeground(Color.GREEN);
+
+                    for (ActionListener listener : openFileButton.getActionListeners()) {
+                        openFileButton.removeActionListener(listener);
+                    }
+
+                    openFileButton.setText("Otevřít");
+                    openFileButton.addActionListener(new ActionListener() {
+                        public void actionPerformed(ActionEvent e) {
+                            openFileButtonActionPerformed(e);
+                        }
+                    });
+
+                    java.awt.GridBagConstraints gridBagConstraints = new java.awt.GridBagConstraints();
+                    gridBagConstraints.gridx = 0;
+                    gridBagConstraints.gridy = 3;
+                    gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+                    jPanel1.remove(disconnectedPanel);
+                    jPanel1.add(connectedPanel, gridBagConstraints);
+                    jPanel1.repaint();
+
+                    // Enabling menu items
+                    connectMenuItem.setEnabled(false);
+                    openFileMenuItem.setEnabled(true);
+                    saveFileMenuItem.setEnabled(true);
+                    saveFileAsMenuItem.setEnabled(true);
+                    disconnectMenuItem.setEnabled(true);
+                } else {
+                    JOptionPane.showMessageDialog(this, "Nepodařilo se připojit k Vašemu účtu Google", "Chyba připojení", JOptionPane.INFORMATION_MESSAGE);
+
+
+                }
+            } catch (Exception ex) {
+                Logger.getLogger(MainView.class
+                        .getName()).log(Level.INFO, null, ex);
+            }
+
+        }
     }//GEN-LAST:event_connectButtonActionPerformed
 
     private void disconnectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_disconnectButtonActionPerformed
@@ -464,7 +519,6 @@ public class MainView extends javax.swing.JFrame {
         disconnectMenuItem.setEnabled(false);
     }//GEN-LAST:event_disconnectButtonActionPerformed
 
-
     private void openFileButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openFileButtonActionPerformed
         GoogleFileChooserDialog fileChooser = new GoogleFileChooserDialog(this, true, service);
         int result = fileChooser.showOpenDialog();
@@ -475,18 +529,20 @@ public class MainView extends javax.swing.JFrame {
             DownloadFileTask task = new DownloadFileTask(service, file);
             task.addPropertyChangeListener(
                     new PropertyChangeListener() {
-                        public void propertyChange(PropertyChangeEvent evt) {
-                            if ("state".equals(evt.getPropertyName())) {
-                                String value = evt.getNewValue().toString();
-                                if (value.equals(SwingWorker.StateValue.STARTED)) {
-                                    progressBar.setValue(10);
-                                }
-                                if (value.equals(SwingWorker.StateValue.DONE)) {
-                                    progressBar.setValue(0);
-                                }
-                            }
+                public void propertyChange(PropertyChangeEvent evt) {
+                    if ("state".equals(evt.getPropertyName())) {
+                        String value = evt.getNewValue().toString();
+                        if (value.equals(SwingWorker.StateValue.STARTED)) {
+                            backgroundActionTF.setText("Stahování souboru");
+                            progressBar.setValue(10);
                         }
-                    });
+                        if (value.equals(SwingWorker.StateValue.DONE)) {
+                            backgroundActionTF.setText("Hotovo");
+                            progressBar.setValue(0);
+                        }
+                    }
+                }
+            });
 
             task.execute();
 
@@ -510,6 +566,48 @@ public class MainView extends javax.swing.JFrame {
         deleteRecordButton.setEnabled(selected);
     }
 
+    private void categoriesListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_categoriesListValueChanged
+        boolean selected = !categoriesList.isSelectionEmpty();
+
+        deleteCategoryButton.setEnabled(selected);
+
+        searchTF.setEnabled(selected);
+        addRecordButton.setEnabled(selected);
+        editRecordButton.setEnabled(editRecordButton.isEnabled() && selected);
+        deleteRecordButton.setEnabled(deleteRecordButton.isEnabled() && selected);
+
+        if (selected) {
+            OdfTableModel tableModel = new OdfTableModel();
+
+            MediaType mediaType = manager.loadTableToMediaType(categoriesList.getSelectedValue().toString());
+            tableModel.setMediaType(mediaType);
+            recordsTable.setModel(tableModel);
+        }
+    }//GEN-LAST:event_categoriesListValueChanged
+
+    private void addCategoryButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addCategoryButtonActionPerformed
+        MediaType type = Dialogs.newMediaTypeDialog();
+        manager.addMediaType(type.getName(), type.getAttributes());
+        DefaultListModel model = (DefaultListModel) categoriesList.getModel();
+
+        model.addElement(type.getName());
+
+    }//GEN-LAST:event_addCategoryButtonActionPerformed
+
+    private void deleteCategoryButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteCategoryButtonActionPerformed
+        manager.deleteMediaType(categoriesList.getSelectedValue().toString());
+        DefaultListModel model = (DefaultListModel) categoriesList.getModel();
+        int index = categoriesList.getSelectedIndex();
+        model.remove(index);
+    }//GEN-LAST:event_deleteCategoryButtonActionPerformed
+
+    private void addRecordButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addRecordButtonActionPerformed
+        OdfTableModel model = (OdfTableModel) recordsTable.getModel();
+        List record = Dialogs.newRecordDialog(model.getMediaType());
+
+        model.fireInserted();;
+        manager.addRecord(categoriesList.getSelectedValue().toString(), record);
+    }//GEN-LAST:event_addRecordButtonActionPerformed
 
     private void saveFileButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveFileButtonActionPerformed
         SwingWorker task;
@@ -521,18 +619,20 @@ public class MainView extends javax.swing.JFrame {
 
         task.addPropertyChangeListener(
                 new PropertyChangeListener() {
-                    public void propertyChange(PropertyChangeEvent evt) {
-                        if ("state".equals(evt.getPropertyName())) {
-                            String value = evt.getNewValue().toString();
-                            if (value.equals(SwingWorker.StateValue.STARTED)) {
-                                progressBar.setValue(10);
-                            }
-                            if (value.equals(SwingWorker.StateValue.DONE)) {
-                                progressBar.setValue(0);
-                            }
-                        }
+            public void propertyChange(PropertyChangeEvent evt) {
+                if ("state".equals(evt.getPropertyName())) {
+                    String value = evt.getNewValue().toString();
+                    if (value.equals(SwingWorker.StateValue.STARTED)) {
+                        backgroundActionTF.setText("Ukládání souboru");
+                        progressBar.setValue(10);
                     }
-                });
+                    if (value.equals(SwingWorker.StateValue.DONE)) {
+                        backgroundActionTF.setText("Hotovo");
+                        progressBar.setValue(0);
+                    }
+                }
+            }
+        });
 
         task.execute();
     }//GEN-LAST:event_saveFileButtonActionPerformed
@@ -572,86 +672,36 @@ public class MainView extends javax.swing.JFrame {
             }
             task.addPropertyChangeListener(
                     new PropertyChangeListener() {
-                        public void propertyChange(PropertyChangeEvent evt) {
-                            if ("state".equals(evt.getPropertyName())) {
-                                String value = evt.getNewValue().toString();
-                                if (value.equals(SwingWorker.StateValue.STARTED)) {
-                                    progressBar.setValue(10);
-                                }
-                                if (value.equals(SwingWorker.StateValue.DONE)) {
-                                    progressBar.setValue(0);
-                                }
-                            }
+                public void propertyChange(PropertyChangeEvent evt) {
+                    if ("state".equals(evt.getPropertyName())) {
+                        String value = evt.getNewValue().toString();
+                        if (value.equals(SwingWorker.StateValue.STARTED)) {
+                            backgroundActionTF.setText("Ukládání souboru");
+                            progressBar.setValue(10);
                         }
-                    });
+                        if (value.equals(SwingWorker.StateValue.DONE)) {
+                            backgroundActionTF.setText("Hotovo");
+                            progressBar.setValue(0);
+                        }
+                    }
+                }
+            });
 
             task.execute();
         }
     }//GEN-LAST:event_saveAsFileButtonActionPerformed
 
-    private void exitMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitMenuItemActionPerformed
-
-    }//GEN-LAST:event_exitMenuItemActionPerformed
-
-    private void addCategoryButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addCategoryButtonActionPerformed
-        MediaType type = Dialogs.newMediaTypeDialog();
-        manager.addMediaType(type.getName(), type.getAttributes());
-        DefaultListModel model = (DefaultListModel) categoriesList.getModel();
-
-        model.addElement(type.getName());
-
-    }//GEN-LAST:event_addCategoryButtonActionPerformed
-
-    private void deleteCategoryButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteCategoryButtonActionPerformed
-        manager.deleteMediaType(categoriesList.getSelectedValue().toString());
-        DefaultListModel model = (DefaultListModel) categoriesList.getModel();
-
-        int index = categoriesList.getSelectedIndex();
-        model.remove(index);
-    }//GEN-LAST:event_deleteCategoryButtonActionPerformed
-
-    private void categoriesListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_categoriesListValueChanged
-        boolean selected = !categoriesList.isSelectionEmpty();
-
-        deleteCategoryButton.setEnabled(selected);
-
-        searchTF.setEnabled(selected);
-        addRecordButton.setEnabled(selected);
-        editRecordButton.setEnabled(editRecordButton.isEnabled() && selected);
-        deleteRecordButton.setEnabled(deleteRecordButton.isEnabled() && selected);
-
-        if (selected) {
-            OdfTableModel tableModel = new OdfTableModel();
-
-            MediaType mediaType = manager.loadTableToMediaType(categoriesList.getSelectedValue().toString());
-            tableModel.setMediaType(mediaType);
-            recordsTable.setModel(tableModel);
-        }
-    }//GEN-LAST:event_categoriesListValueChanged
-
-    private void addRecordButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addRecordButtonActionPerformed
-        OdfTableModel model = (OdfTableModel)recordsTable.getModel();
-        List record = Dialogs.newRecordDialog(model.getMediaType());
-        
-        model.fireInserted();;
-        manager.addRecord(categoriesList.getSelectedValue().toString(), record);
-    }//GEN-LAST:event_addRecordButtonActionPerformed
-
-    private void editRecordButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editRecordButtonActionPerformed
-
-    }//GEN-LAST:event_editRecordButtonActionPerformed
-
     private void deleteRecordButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteRecordButtonActionPerformed
-OdfTableModel model = (OdfTableModel)recordsTable.getModel();
-        manager.deleteRecord(categoriesList.getSelectedValue().toString(), recordsTable.getSelectedRow() );
+        OdfTableModel model = (OdfTableModel) recordsTable.getModel();
+        manager.deleteRecord(categoriesList.getSelectedValue().toString(), recordsTable.getSelectedRow()+1);
         model.getMediaType().getRecords().remove(recordsTable.getSelectedRow());
-        
+
         model.fireDeleted(recordsTable.getSelectedRow());
     }//GEN-LAST:event_deleteRecordButtonActionPerformed
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addCategoryButton;
     private javax.swing.JButton addRecordButton;
+    private javax.swing.JLabel backgroundActionTF;
     private javax.swing.JList categoriesList;
     private javax.swing.JButton connectButton;
     private javax.swing.JMenuItem connectMenuItem;
@@ -664,6 +714,7 @@ OdfTableModel model = (OdfTableModel)recordsTable.getModel();
     private javax.swing.JPanel disconnectedPanel;
     private javax.swing.JButton editRecordButton;
     private javax.swing.JMenuItem exitMenuItem;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -687,17 +738,9 @@ OdfTableModel model = (OdfTableModel)recordsTable.getModel();
     private javax.swing.JTable recordsTable;
     private javax.swing.JMenuItem saveFileAsMenuItem;
     private javax.swing.JMenuItem saveFileMenuItem;
-    private javax.swing.JLabel searchLabel;
     private javax.swing.JTextField searchTF;
     private javax.swing.JPanel statusBar;
-    private javax.swing.JLabel statusLabel;
     // End of variables declaration//GEN-END:variables
-
-    public static Image getImage(final String pathAndFileName) {
-        final URL url = Thread.currentThread().getContextClassLoader().getResource(pathAndFileName);
-        return Toolkit.getDefaultToolkit().getImage(url);
-
-    }
 
     private class DownloadFileTask extends SwingWorker<java.io.File, Integer> {
 
@@ -716,10 +759,12 @@ OdfTableModel model = (OdfTableModel)recordsTable.getModel();
 
         @Override
         protected void done() {
-            //backgroundActionTF.setText("Soubor stáhnut");
+            backgroundActionTF.setText("Soubor stáhnut");
             try {
                 java.io.File downloadedFile = this.get();
+
                 actualFile = fileToDownload;
+
                 manager = new DomManagerImpl(downloadedFile);
 
                 DefaultListModel model = new DefaultListModel();
@@ -762,6 +807,7 @@ OdfTableModel model = (OdfTableModel)recordsTable.getModel();
                     JOptionPane.showMessageDialog(rootPane, "Chyba při ukládání souboru", "Chyba", JOptionPane.ERROR_MESSAGE);
                 } else {
                     actualFile = updatedFile;
+                    backgroundActionTF.setText("Soubor uložen");
                 }
             } catch (InterruptedException ex) {
                 Logger.getLogger(MainView.class.getName()).log(Level.SEVERE, null, ex);
@@ -799,6 +845,7 @@ OdfTableModel model = (OdfTableModel)recordsTable.getModel();
                     JOptionPane.showMessageDialog(rootPane, "Chyba při ukládání souboru", "Chyba", JOptionPane.ERROR_MESSAGE);
                 } else {
                     actualFile = updatedFile;
+                    backgroundActionTF.setText("Soubor uložen");
                 }
             } catch (InterruptedException ex) {
                 Logger.getLogger(MainView.class.getName()).log(Level.SEVERE, null, ex);

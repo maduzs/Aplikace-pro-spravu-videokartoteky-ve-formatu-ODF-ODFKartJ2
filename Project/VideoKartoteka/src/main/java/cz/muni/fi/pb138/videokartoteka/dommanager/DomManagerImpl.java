@@ -1,5 +1,6 @@
 package cz.muni.fi.pb138.videokartoteka.dommanager;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -7,7 +8,6 @@ import java.util.logging.Logger;
 import org.odftoolkit.odfdom.doc.OdfSpreadsheetDocument;
 import org.odftoolkit.odfdom.doc.table.OdfTable;
 import org.odftoolkit.odfdom.doc.table.OdfTableCell;
-import java.io.File;
 
 /**
  *
@@ -25,6 +25,7 @@ public class DomManagerImpl implements DomManager {
     public DomManagerImpl(java.io.File file) {
         try {
             inputDocument = (OdfSpreadsheetDocument) OdfSpreadsheetDocument.loadDocument(file);
+            this.file = file;
         } catch (Exception ex) {
             System.err.println("Unable to parse input file.");
             Logger.getLogger(DomManagerImpl.class.getName()).log(Level.SEVERE, null, ex);
@@ -35,9 +36,15 @@ public class DomManagerImpl implements DomManager {
     public void addMediaType(String name, List<String> attributes) {
 
         try {
-            OdfTable t = OdfTable.newTable(inputDocument);
-            t.setTableName(name);
-            this.addRecord(name, attributes);
+            OdfTable table = OdfTable.newTable(inputDocument);
+            table.setTableName(name);
+            if (table == null) {
+                throw new IllegalArgumentException("Media not found.");
+            }
+            for (int i = 0; i < attributes.size(); i++) {
+                OdfTableCell cell = table.getCellByPosition(i, 0);
+                cell.setStringValue(attributes.get(i));
+            }
 
         } catch (Exception ex) {
             Logger.getLogger(DomManagerImpl.class.getName()).log(Level.SEVERE, null, ex);
@@ -88,7 +95,7 @@ public class DomManagerImpl implements DomManager {
             throw new IllegalArgumentException("Media not found.");
         }
 
-        table.removeRowsByIndex(id, id);
+        table.removeRowsByIndex(id, 1);
 
     }
 
@@ -122,6 +129,7 @@ public class DomManagerImpl implements DomManager {
         if (table == null) {
             throw new IllegalArgumentException("Media not found.");
         }
+
 
         for (int row = 0; row < table.getRowCount(); row++) {
 
@@ -254,10 +262,6 @@ public class DomManagerImpl implements DomManager {
         return file;
     }
 
-    public List<String> listMediaTypes() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
     public String getRecord(String media, int id) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
@@ -265,5 +269,4 @@ public class DomManagerImpl implements DomManager {
     public List<String> listRecords(String media) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-
 }
