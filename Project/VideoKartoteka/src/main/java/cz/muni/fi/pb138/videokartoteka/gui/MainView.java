@@ -31,7 +31,6 @@ import javax.swing.SwingWorker;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -42,7 +41,7 @@ public class MainView extends javax.swing.JFrame {
     private GoogleConnection gc;
     private GoogleDriveService service;
     private DomManagerImpl manager;
-    private File actualFile;
+    private File actualFile = new File();
     private boolean saved = true;
 
     /**
@@ -86,7 +85,7 @@ public class MainView extends javax.swing.JFrame {
 
         } else {
             searchLabel.setText("");
-            recordsTable.setDefaultRenderer(Object.class, new DefaultTableCellRenderer());
+            recordsTable.setDefaultRenderer(Object.class, new MyTableCellRenderer());
         }
 
         OdfTableModel model = (OdfTableModel) recordsTable.getModel();
@@ -113,9 +112,9 @@ public class MainView extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         connectionStateLabel = new javax.swing.JLabel();
+        connectButton = new javax.swing.JButton();
         disconnectedPanel = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
-        connectButton = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         jPanel2 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
@@ -206,7 +205,7 @@ public class MainView extends javax.swing.JFrame {
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
         jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        jPanel1.setLayout(new java.awt.GridLayout(1, 0));
+        jPanel1.setLayout(new java.awt.GridLayout());
 
         jLabel1.setIcon(new javax.swing.ImageIcon(getImage("Google_Logo.png")));
         jPanel1.add(jLabel1);
@@ -216,14 +215,6 @@ public class MainView extends javax.swing.JFrame {
         connectionStateLabel.setText("<html><b>Nejste připojeni</b></html>");
         jPanel1.add(connectionStateLabel);
 
-        disconnectedPanel.setBackground(new java.awt.Color(255, 255, 255));
-        disconnectedPanel.setLayout(new java.awt.GridBagLayout());
-
-        jLabel3.setText("ke svému účtu Google");
-        disconnectedPanel.add(jLabel3, new java.awt.GridBagConstraints());
-
-        jPanel1.add(disconnectedPanel);
-
         connectButton.setText("Připojit");
         connectButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -231,6 +222,14 @@ public class MainView extends javax.swing.JFrame {
             }
         });
         jPanel1.add(connectButton);
+
+        disconnectedPanel.setBackground(new java.awt.Color(255, 255, 255));
+        disconnectedPanel.setLayout(new java.awt.GridBagLayout());
+
+        jLabel3.setText("ke svému účtu Google");
+        disconnectedPanel.add(jLabel3, new java.awt.GridBagConstraints());
+
+        jPanel1.add(disconnectedPanel);
 
         jLabel2.setText("Kategorie:");
 
@@ -321,15 +320,14 @@ public class MainView extends javax.swing.JFrame {
             }
         });
 
+        searchLabel.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        searchLabel.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGap(325, 325, 325)
-                .addComponent(searchLabel)
-                .addContainerGap(165, Short.MAX_VALUE))
-            .addComponent(jScrollPane4)
+            .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 512, Short.MAX_VALUE)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addComponent(addRecordButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -337,12 +335,12 @@ public class MainView extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(deleteRecordButton)
                 .addGap(0, 0, Short.MAX_VALUE))
+            .addComponent(searchLabel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(searchLabel)
+                .addComponent(searchLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 291, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -350,7 +348,7 @@ public class MainView extends javax.swing.JFrame {
                     .addComponent(deleteRecordButton)
                     .addComponent(editRecordButton)
                     .addComponent(addRecordButton))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(12, Short.MAX_VALUE))
         );
 
         searchLabel.getAccessibleContext().setAccessibleName("resultsLabel");
@@ -439,7 +437,7 @@ public class MainView extends javax.swing.JFrame {
                     .addComponent(jLabel4)
                     .addComponent(searchTF, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(17, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addComponent(quickMenuBar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
@@ -457,7 +455,7 @@ public class MainView extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jScrollPane2)
                     .addComponent(jScrollPane1))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 22, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 13, Short.MAX_VALUE)
                 .addComponent(statusBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
@@ -531,8 +529,8 @@ public class MainView extends javax.swing.JFrame {
 
         java.awt.GridBagConstraints gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 3;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.NORTH;
         jPanel1.remove(connectedPanel);
         jPanel1.add(disconnectedPanel, gridBagConstraints);
         jPanel1.repaint();
@@ -666,31 +664,36 @@ public class MainView extends javax.swing.JFrame {
     }//GEN-LAST:event_addRecordButtonActionPerformed
 
     private void saveFileButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveFileButtonActionPerformed
-        SwingWorker task;
+        if (this.actualFile.getId().isEmpty()) {
+            // File is new, is not loaded
+            saveAsFileButtonActionPerformed(evt);
+        } else {
+            SwingWorker task;
 
-        // Content
-        java.io.File content = manager.saveSpreadSheet();
+            // Content
+            java.io.File content = manager.saveSpreadSheet();
 
-        task = new SaveFileTask(service, actualFile, content);
+            task = new SaveFileTask(service, actualFile, content);
 
-        task.addPropertyChangeListener(
-                new PropertyChangeListener() {
-                    public void propertyChange(PropertyChangeEvent evt) {
-                        if ("state".equals(evt.getPropertyName())) {
-                            Object value = evt.getNewValue();
-                            if (value.equals(SwingWorker.StateValue.STARTED)) {
-                                statusLabel.setText("Ukládání souboru");
-                                progressBar.setValue(20);
-                            }
-                            if (value.equals(SwingWorker.StateValue.DONE)) {
-                                statusLabel.setText("Soubor uložen");
-                                progressBar.setValue(0);
+            task.addPropertyChangeListener(
+                    new PropertyChangeListener() {
+                        public void propertyChange(PropertyChangeEvent evt) {
+                            if ("state".equals(evt.getPropertyName())) {
+                                Object value = evt.getNewValue();
+                                if (value.equals(SwingWorker.StateValue.STARTED)) {
+                                    statusLabel.setText("Ukládání souboru");
+                                    progressBar.setValue(20);
+                                }
+                                if (value.equals(SwingWorker.StateValue.DONE)) {
+                                    statusLabel.setText("Soubor uložen");
+                                    progressBar.setValue(0);
+                                }
                             }
                         }
-                    }
-                });
+                    });
 
-        task.execute();
+            task.execute();
+        }
     }//GEN-LAST:event_saveFileButtonActionPerformed
 
     private void saveAsFileButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveAsFileButtonActionPerformed
@@ -1030,8 +1033,8 @@ public class MainView extends javax.swing.JFrame {
 
                     java.awt.GridBagConstraints gridBagConstraints = new java.awt.GridBagConstraints();
                     gridBagConstraints.gridx = 0;
-                    gridBagConstraints.gridy = 3;
-                    gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+                    gridBagConstraints.gridy = 2;
+                    gridBagConstraints.fill = java.awt.GridBagConstraints.NORTH;
                     jPanel1.remove(disconnectedPanel);
                     jPanel1.add(connectedPanel, gridBagConstraints);
                     jPanel1.repaint();
