@@ -28,7 +28,7 @@ public class GoogleConnection {
         CLIENT_ID = "200863197931.apps.googleusercontent.com";
         CLIENT_SECRET = "aKKa4YGHM-YsJkZvzpxpE8wM";
         REDIRECT_URI = "urn:ietf:wg:oauth:2.0:oob";
-        
+
         connection = new GoogleConnection();
     }
     private static GoogleConnection connection;
@@ -43,7 +43,7 @@ public class GoogleConnection {
     private GoogleCredential credential;
     private Drive service;
     private boolean connected;
-    
+
     public GoogleConnection() {
         httpTransport = new NetHttpTransport();
         jsonFactory = new JacksonFactory();
@@ -54,19 +54,20 @@ public class GoogleConnection {
                 .setApprovalPrompt("auto").build();
 
         url = flow.newAuthorizationUrl().setRedirectUri(REDIRECT_URI).build();
+
         connected = false;
     }
-    
-    public boolean isConnected() {
-        return this.connected;
-    }
-    
+
     public static GoogleConnection getConnection() {
         return connection;
     }
 
     public String getAuthentizationUrl() {
         return this.url;
+    }
+
+    public boolean isConnected() {
+        return this.connected;
     }
 
     public boolean connect(String code) {
@@ -76,6 +77,9 @@ public class GoogleConnection {
             response = flow.newTokenRequest(code).setRedirectUri(REDIRECT_URI).execute();
             credential = new GoogleCredential().setFromTokenResponse(response);
             this.connected = true;
+        } catch (com.google.api.client.auth.oauth2.TokenResponseException ex) {
+            Logger.getLogger(GoogleConnection.class.getName()).log(Level.SEVERE, null, ex);
+            result = false;
         } catch (Exception ex) {
             Logger.getLogger(GoogleConnection.class.getName()).log(Level.SEVERE, null, ex);
             result = false;
@@ -84,17 +88,19 @@ public class GoogleConnection {
         return result;
     }
 
-    public GoogleDriveService buildService() {       
+    public GoogleDriveService buildService() {
         if (credential == null) {
             return null;
         }
         if (service == null) {
-            service = new Drive.Builder(httpTransport, jsonFactory, credential).build();;
+            service = new Drive.Builder(httpTransport, jsonFactory, credential)
+                    .setApplicationName("VideoDescApp")
+                    .build();
         }
 
         return new GoogleDriveService(service);
-    }    
-    public void  close() {
-        
+    }
+
+    public void close() {
     }
 }

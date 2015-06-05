@@ -4,8 +4,6 @@
  */
 package cz.muni.fi.pb138.videokartoteka.gui;
 
-import static cz.muni.fi.pb138.videokartoteka.gui.GoogleFileChooserDialog.RESULT_CANCEL;
-import static cz.muni.fi.pb138.videokartoteka.gui.GoogleFileChooserDialog.RESULT_OK;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.ClipboardOwner;
@@ -20,11 +18,11 @@ import javax.swing.JOptionPane;
  */
 public class GoogleConnectionDialog extends javax.swing.JDialog implements ClipboardOwner {
 
-    public static final int CLOSED_OPTION = 0;
-    public static final int OK_OPTION = 1;
-    public static final int CANCEL_OPTION = 2;
+    public static final int RESULT_CLOSED = 0;
+    public static final int RESULT_OK = 1;
+    public static final int RESULT_CANCEL = 2;
     
-    private int result = CLOSED_OPTION;
+    private int result = RESULT_CLOSED;
     /**
      * Creates new form GoogleConnectionDialog
      */

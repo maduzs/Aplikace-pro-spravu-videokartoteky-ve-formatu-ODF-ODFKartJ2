@@ -10,6 +10,8 @@ import cz.muni.fi.pb138.videokartoteka.google.GoogleDriveService;
 import cz.muni.fi.pb138.videokartoteka.gui.components.OdfTableModel;
 import java.awt.Color;
 import java.awt.Desktop;
+import java.awt.Image;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
@@ -17,6 +19,7 @@ import java.beans.PropertyChangeListener;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -28,6 +31,7 @@ import javax.swing.SwingWorker;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -39,6 +43,7 @@ public class MainView extends javax.swing.JFrame {
     private GoogleDriveService service;
     private DomManagerImpl manager;
     private File actualFile;
+    private boolean saved = true;
 
     /**
      * Creates new form MainView
@@ -97,20 +102,19 @@ public class MainView extends javax.swing.JFrame {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
-        java.awt.GridBagConstraints gridBagConstraints;
 
         connectedPanel = new javax.swing.JPanel();
         disconnectButton = new javax.swing.JButton();
         openFileButton = new javax.swing.JButton();
         statusBar = new javax.swing.JPanel();
         progressBar = new javax.swing.JProgressBar();
-        backgroundActionTF = new javax.swing.JLabel();
+        statusLabel = new javax.swing.JLabel();
         quickMenuBar = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         connectionStateLabel = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
         disconnectedPanel = new javax.swing.JPanel();
+        jLabel3 = new javax.swing.JLabel();
         connectButton = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         jPanel2 = new javax.swing.JPanel();
@@ -121,14 +125,14 @@ public class MainView extends javax.swing.JFrame {
         addCategoryButton = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         jPanel3 = new javax.swing.JPanel();
-        jLabel4 = new javax.swing.JLabel();
-        searchTF = new javax.swing.JTextField();
         jScrollPane4 = new javax.swing.JScrollPane();
         recordsTable = new javax.swing.JTable();
         deleteRecordButton = new javax.swing.JButton();
         editRecordButton = new javax.swing.JButton();
         addRecordButton = new javax.swing.JButton();
         searchLabel = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        searchTF = new javax.swing.JTextField();
         menuBar = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         connectMenuItem = new javax.swing.JMenuItem();
@@ -142,6 +146,7 @@ public class MainView extends javax.swing.JFrame {
         jMenu2 = new javax.swing.JMenu();
 
         connectedPanel.setBackground(new java.awt.Color(255, 255, 255));
+        connectedPanel.setLayout(new java.awt.BorderLayout());
 
         disconnectButton.setText("Odpojit");
         disconnectButton.addActionListener(new java.awt.event.ActionListener() {
@@ -149,6 +154,7 @@ public class MainView extends javax.swing.JFrame {
                 disconnectButtonActionPerformed(evt);
             }
         });
+        connectedPanel.add(disconnectButton, java.awt.BorderLayout.CENTER);
 
         openFileButton.setText("Otevřít");
         openFileButton.addActionListener(new java.awt.event.ActionListener() {
@@ -156,27 +162,15 @@ public class MainView extends javax.swing.JFrame {
                 openFileButtonActionPerformed(evt);
             }
         });
-
-        javax.swing.GroupLayout connectedPanelLayout = new javax.swing.GroupLayout(connectedPanel);
-        connectedPanel.setLayout(connectedPanelLayout);
-        connectedPanelLayout.setHorizontalGroup(
-            connectedPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, connectedPanelLayout.createSequentialGroup()
-                .addComponent(openFileButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(disconnectButton, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))
-        );
-        connectedPanelLayout.setVerticalGroup(
-            connectedPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(connectedPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                .addComponent(disconnectButton)
-                .addComponent(openFileButton))
-        );
+        connectedPanel.add(openFileButton, java.awt.BorderLayout.PAGE_START);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("VideoDesGApps");
         setAutoRequestFocus(false);
 
         statusBar.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        statusLabel.setName(""); // NOI18N
 
         javax.swing.GroupLayout statusBarLayout = new javax.swing.GroupLayout(statusBar);
         statusBar.setLayout(statusBarLayout);
@@ -184,7 +178,7 @@ public class MainView extends javax.swing.JFrame {
             statusBarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, statusBarLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(backgroundActionTF)
+                .addComponent(statusLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(progressBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
@@ -194,7 +188,7 @@ public class MainView extends javax.swing.JFrame {
             .addComponent(progressBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(statusBarLayout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(backgroundActionTF))
+                .addComponent(statusLabel))
         );
 
         quickMenuBar.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
@@ -212,29 +206,23 @@ public class MainView extends javax.swing.JFrame {
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
         jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        jPanel1.setLayout(new java.awt.GridBagLayout());
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 0;
-        jPanel1.add(jLabel1, gridBagConstraints);
+        jPanel1.setLayout(new java.awt.GridLayout(1, 0));
+
+        jLabel1.setIcon(new javax.swing.ImageIcon(getImage("Google_Logo.png")));
+        jPanel1.add(jLabel1);
 
         connectionStateLabel.setForeground(java.awt.Color.RED);
+        connectionStateLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         connectionStateLabel.setText("<html><b>Nejste připojeni</b></html>");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.insets = new java.awt.Insets(5, 0, 0, 0);
-        jPanel1.add(connectionStateLabel, gridBagConstraints);
-
-        jLabel3.setText("ke svému účtu Google");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
-        jPanel1.add(jLabel3, gridBagConstraints);
+        jPanel1.add(connectionStateLabel);
 
         disconnectedPanel.setBackground(new java.awt.Color(255, 255, 255));
         disconnectedPanel.setLayout(new java.awt.GridBagLayout());
+
+        jLabel3.setText("ke svému účtu Google");
+        disconnectedPanel.add(jLabel3, new java.awt.GridBagConstraints());
+
+        jPanel1.add(disconnectedPanel);
 
         connectButton.setText("Připojit");
         connectButton.addActionListener(new java.awt.event.ActionListener() {
@@ -242,12 +230,7 @@ public class MainView extends javax.swing.JFrame {
                 connectButtonActionPerformed(evt);
             }
         });
-        disconnectedPanel.add(connectButton, new java.awt.GridBagConstraints());
-
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 3;
-        jPanel1.add(disconnectedPanel, gridBagConstraints);
+        jPanel1.add(connectButton);
 
         jLabel2.setText("Kategorie:");
 
@@ -259,7 +242,7 @@ public class MainView extends javax.swing.JFrame {
         });
         jScrollPane3.setViewportView(categoriesList);
 
-        deleteCategoryButton.setText("Smazat");
+        deleteCategoryButton.setText("Delete");
         deleteCategoryButton.setEnabled(false);
         deleteCategoryButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -267,7 +250,7 @@ public class MainView extends javax.swing.JFrame {
             }
         });
 
-        addCategoryButton.setText("Přidat");
+        addCategoryButton.setText("Add");
         addCategoryButton.setEnabled(false);
         addCategoryButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -282,14 +265,13 @@ public class MainView extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel2)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(addCategoryButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(deleteCategoryButton))
-                    .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 181, Short.MAX_VALUE)
-                    .addComponent(jLabel2))
-                .addContainerGap())
+                        .addComponent(deleteCategoryButton)))
+                .addContainerGap(28, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -297,20 +279,15 @@ public class MainView extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 191, Short.MAX_VALUE)
-                .addGap(18, 18, 18)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 278, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(deleteCategoryButton)
-                    .addComponent(addCategoryButton))
-                .addContainerGap())
+                    .addComponent(addCategoryButton)
+                    .addComponent(deleteCategoryButton))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jScrollPane1.setViewportView(jPanel2);
-
-        jLabel4.setText("Hledání:");
-
-        searchTF.setEnabled(false);
-        searchTF.setName(""); // NOI18N
 
         recordsTable.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         recordsTable.getSelectionModel().addListSelectionListener(new javax.swing.event.ListSelectionListener() {
@@ -320,7 +297,7 @@ public class MainView extends javax.swing.JFrame {
         });
         jScrollPane4.setViewportView(recordsTable);
 
-        deleteRecordButton.setText("Smazat");
+        deleteRecordButton.setText("Delete");
         deleteRecordButton.setEnabled(false);
         deleteRecordButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -328,7 +305,7 @@ public class MainView extends javax.swing.JFrame {
             }
         });
 
-        editRecordButton.setText("Změnit");
+        editRecordButton.setText("Edit");
         editRecordButton.setEnabled(false);
         editRecordButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -336,7 +313,7 @@ public class MainView extends javax.swing.JFrame {
             }
         });
 
-        addRecordButton.setText("Přidat");
+        addRecordButton.setText("Add");
         addRecordButton.setEnabled(false);
         addRecordButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -349,46 +326,41 @@ public class MainView extends javax.swing.JFrame {
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 472, Short.MAX_VALUE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(addRecordButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(editRecordButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(deleteRecordButton))
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addComponent(jLabel4)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(searchTF, javax.swing.GroupLayout.PREFERRED_SIZE, 254, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(searchLabel)
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
+                .addGap(325, 325, 325)
+                .addComponent(searchLabel)
+                .addContainerGap(165, Short.MAX_VALUE))
+            .addComponent(jScrollPane4)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addComponent(addRecordButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(editRecordButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(deleteRecordButton)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel4)
-                    .addComponent(searchTF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(searchLabel))
+                .addComponent(searchLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 343, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 291, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(deleteRecordButton)
                     .addComponent(editRecordButton)
                     .addComponent(addRecordButton))
-                .addContainerGap())
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         searchLabel.getAccessibleContext().setAccessibleName("resultsLabel");
 
         jScrollPane2.setViewportView(jPanel3);
+
+        jLabel4.setText("Hledání:");
+
+        searchTF.setEnabled(false);
+        searchTF.setName(""); // NOI18N
 
         jMenu1.setText("Soubor");
 
@@ -460,10 +432,14 @@ public class MainView extends javax.swing.JFrame {
             .addComponent(statusBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jScrollPane1))
+                    .addComponent(jScrollPane2)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 484, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel4)
+                    .addComponent(searchTF, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(17, Short.MAX_VALUE))
             .addComponent(quickMenuBar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
@@ -471,13 +447,17 @@ public class MainView extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addComponent(quickMenuBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel4)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane1))
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                        .addComponent(searchTF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jScrollPane2)
+                    .addComponent(jScrollPane1))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 22, Short.MAX_VALUE)
                 .addComponent(statusBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
@@ -489,6 +469,7 @@ public class MainView extends javax.swing.JFrame {
             gc = new GoogleConnection();
         }
         GoogleConnectionDialog gcd = new GoogleConnectionDialog(this, true);
+        gcd.setLocationRelativeTo(this);
         gcd.setConnectionUrl(gc.getAuthentizationUrl());
 
         if (Desktop.isDesktopSupported()) {
@@ -502,54 +483,43 @@ public class MainView extends javax.swing.JFrame {
         }
         int result = gcd.showDialog();
 
-        if (result == GoogleConnectionDialog.OK_OPTION) {
-            try {
-                gc.connect(gcd.getCode());
-                if (gc.isConnected()) {
-                    service = gc.buildService();
-
-                    connectionStateLabel.setText("<html><b>Jste připojeni</b></html>");
-                    connectionStateLabel.setForeground(Color.GREEN);
-
-                    for (ActionListener listener : openFileButton.getActionListeners()) {
-                        openFileButton.removeActionListener(listener);
-                    }
-
-                    openFileButton.setText("Otevřít");
-                    openFileButton.addActionListener(new ActionListener() {
-                        public void actionPerformed(ActionEvent e) {
-                            openFileButtonActionPerformed(e);
+        if (result == GoogleConnectionDialog.RESULT_OK) {
+            SwingWorker task = new ConnectToGoogleDriveTask(gc, gcd.getCode());
+            task.addPropertyChangeListener(
+                    new PropertyChangeListener() {
+                        public void propertyChange(PropertyChangeEvent evt) {
+                            if ("state".equals(evt.getPropertyName())) {
+                                Object value = evt.getNewValue();
+                                if (value.equals(SwingWorker.StateValue.STARTED)) {
+                                    statusLabel.setText("Připojování k autentizační službě Google");
+                                    progressBar.setValue(20);
+                                }
+                                if (value.equals(SwingWorker.StateValue.DONE)) {
+                                    statusLabel.setText("Připojování ukončeno");
+                                    progressBar.setValue(0);
+                                }
+                            }
                         }
                     });
 
-                    java.awt.GridBagConstraints gridBagConstraints = new java.awt.GridBagConstraints();
-                    gridBagConstraints.gridx = 0;
-                    gridBagConstraints.gridy = 3;
-                    gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-                    jPanel1.remove(disconnectedPanel);
-                    jPanel1.add(connectedPanel, gridBagConstraints);
-                    jPanel1.repaint();
-
-                    // Enabling menu items
-                    connectMenuItem.setEnabled(false);
-                    openFileMenuItem.setEnabled(true);
-                    saveFileMenuItem.setEnabled(true);
-                    saveFileAsMenuItem.setEnabled(true);
-                    disconnectMenuItem.setEnabled(true);
-                } else {
-                    JOptionPane.showMessageDialog(this, "Nepodařilo se připojit k Vašemu účtu Google", "Chyba připojení", JOptionPane.INFORMATION_MESSAGE);
-
-
-                }
-            } catch (Exception ex) {
-                Logger.getLogger(MainView.class
-                        .getName()).log(Level.INFO, null, ex);
-            }
-
+            task.execute();
         }
     }//GEN-LAST:event_connectButtonActionPerformed
 
     private void disconnectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_disconnectButtonActionPerformed
+        if (!saved) {
+            int dialogResult = JOptionPane.showConfirmDialog(this, "Opravdu se chcete odpojit od svého účtu Google? "
+                    + "Veškerá neuložená data budou ztracena", "Potvrzení", JOptionPane.YES_NO_OPTION);
+
+            if (dialogResult == JOptionPane.YES_OPTION) {
+                disconnect();
+            }
+        } else {
+            disconnect();
+        }
+    }//GEN-LAST:event_disconnectButtonActionPerformed
+
+    private void disconnect() {
         gc.close();
         gc = null;
 
@@ -573,10 +543,27 @@ public class MainView extends javax.swing.JFrame {
         saveFileMenuItem.setEnabled(false);
         saveFileAsMenuItem.setEnabled(false);
         disconnectMenuItem.setEnabled(false);
-    }//GEN-LAST:event_disconnectButtonActionPerformed
 
+        statusLabel.setText("Odpojeno");
+
+        saved = true;
+    }
+    
     private void openFileButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openFileButtonActionPerformed
+        if (!saved) {
+            int dialogResult = JOptionPane.showConfirmDialog(this, "Opravdu se otevřít nový soubor? "
+                    + "Veškerá neuložená data budou ztracena", "Potvrzení", JOptionPane.YES_NO_OPTION);
+            if (dialogResult == JOptionPane.YES_OPTION) {
+                openFile();
+            }
+        } else {
+            openFile();
+        }
+    }//GEN-LAST:event_openFileButtonActionPerformed
+
+    private void openFile() {
         GoogleFileChooserDialog fileChooser = new GoogleFileChooserDialog(this, true, service);
+        fileChooser.setLocationRelativeTo(this);
         int result = fileChooser.showOpenDialog();
 
         if (result == GoogleFileChooserDialog.RESULT_OK) {
@@ -585,20 +572,20 @@ public class MainView extends javax.swing.JFrame {
             DownloadFileTask task = new DownloadFileTask(service, file);
             task.addPropertyChangeListener(
                     new PropertyChangeListener() {
-                public void propertyChange(PropertyChangeEvent evt) {
-                    if ("state".equals(evt.getPropertyName())) {
-                        String value = evt.getNewValue().toString();
-                        if (value.equals(SwingWorker.StateValue.STARTED)) {
-                            backgroundActionTF.setText("Stahování souboru");
-                            progressBar.setValue(10);
+                        public void propertyChange(PropertyChangeEvent evt) {
+                            if ("state".equals(evt.getPropertyName())) {
+                                Object value = evt.getNewValue();
+                                if (value.equals(SwingWorker.StateValue.STARTED)) {
+                                    statusLabel.setText("Stahování souboru");
+                                    progressBar.setValue(20);
+                                }
+                                if (value.equals(SwingWorker.StateValue.DONE)) {
+                                    statusLabel.setText("Soubor otevřen");
+                                    progressBar.setValue(0);
+                                }
+                            }
                         }
-                        if (value.equals(SwingWorker.StateValue.DONE)) {
-                            backgroundActionTF.setText("Hotovo");
-                            progressBar.setValue(0);
-                        }
-                    }
-                }
-            });
+                    });
 
             task.execute();
 
@@ -613,8 +600,8 @@ public class MainView extends javax.swing.JFrame {
                 }
             });
         }
-    }//GEN-LAST:event_openFileButtonActionPerformed
-
+    }
+    
     private void recordsTableValueChanged(javax.swing.event.ListSelectionEvent evt) {
         boolean selected = recordsTable.getSelectedRow() != -1;
 
@@ -638,7 +625,9 @@ public class MainView extends javax.swing.JFrame {
             MediaType mediaType = manager.loadTableToMediaType(categoriesList.getSelectedValue().toString());
             tableModel.setMediaType(mediaType);
             recordsTable.setModel(tableModel);
-        }
+         } else {
+            recordsTable.setModel(new DefaultTableModel());
+         }
 
         this.searchText();
 
@@ -652,6 +641,7 @@ public class MainView extends javax.swing.JFrame {
             DefaultListModel model = (DefaultListModel) categoriesList.getModel();
 
             model.addElement(type.getName());
+            saved = false;
         }
     }//GEN-LAST:event_addCategoryButtonActionPerformed
 
@@ -660,6 +650,7 @@ public class MainView extends javax.swing.JFrame {
         DefaultListModel model = (DefaultListModel) categoriesList.getModel();
         int index = categoriesList.getSelectedIndex();
         model.remove(index);
+        saved = false;
     }//GEN-LAST:event_deleteCategoryButtonActionPerformed
 
     private void addRecordButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addRecordButtonActionPerformed
@@ -669,6 +660,7 @@ public class MainView extends javax.swing.JFrame {
         if (record != null) {
             model.fireInserted();
             manager.addRecord(categoriesList.getSelectedValue().toString(), record);
+            saved = false;
         }
     }//GEN-LAST:event_addRecordButtonActionPerformed
 
@@ -682,26 +674,27 @@ public class MainView extends javax.swing.JFrame {
 
         task.addPropertyChangeListener(
                 new PropertyChangeListener() {
-            public void propertyChange(PropertyChangeEvent evt) {
-                if ("state".equals(evt.getPropertyName())) {
-                    String value = evt.getNewValue().toString();
-                    if (value.equals(SwingWorker.StateValue.STARTED)) {
-                        backgroundActionTF.setText("Ukládání souboru");
-                        progressBar.setValue(10);
+                    public void propertyChange(PropertyChangeEvent evt) {
+                        if ("state".equals(evt.getPropertyName())) {
+                            Object value = evt.getNewValue();
+                            if (value.equals(SwingWorker.StateValue.STARTED)) {
+                                statusLabel.setText("Ukládání souboru");
+                                progressBar.setValue(20);
+                            }
+                            if (value.equals(SwingWorker.StateValue.DONE)) {
+                                statusLabel.setText("Soubor uložen");
+                                progressBar.setValue(0);
+                            }
+                        }
                     }
-                    if (value.equals(SwingWorker.StateValue.DONE)) {
-                        backgroundActionTF.setText("Hotovo");
-                        progressBar.setValue(0);
-                    }
-                }
-            }
-        });
+                });
 
         task.execute();
     }//GEN-LAST:event_saveFileButtonActionPerformed
 
     private void saveAsFileButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveAsFileButtonActionPerformed
         GoogleFileChooserDialog fileChooser = new GoogleFileChooserDialog(this, true, service);
+        fileChooser.setLocationRelativeTo(this);
         int result = fileChooser.showSaveDialog();
 
         SwingWorker task;
@@ -735,20 +728,20 @@ public class MainView extends javax.swing.JFrame {
             }
             task.addPropertyChangeListener(
                     new PropertyChangeListener() {
-                public void propertyChange(PropertyChangeEvent evt) {
-                    if ("state".equals(evt.getPropertyName())) {
-                        String value = evt.getNewValue().toString();
-                        if (value.equals(SwingWorker.StateValue.STARTED)) {
-                            backgroundActionTF.setText("Ukládání souboru");
-                            progressBar.setValue(10);
+                        public void propertyChange(PropertyChangeEvent evt) {
+                            if ("state".equals(evt.getPropertyName())) {
+                                Object value = evt.getNewValue();
+                                if (value.equals(SwingWorker.StateValue.STARTED)) {
+                                    statusLabel.setText("Ukládání souboru");
+                                    progressBar.setValue(20);
+                                }
+                                if (value.equals(SwingWorker.StateValue.DONE)) {
+                                    statusLabel.setText("Soubor uložen");
+                                    progressBar.setValue(0);
+                                }
+                            }
                         }
-                        if (value.equals(SwingWorker.StateValue.DONE)) {
-                            backgroundActionTF.setText("Hotovo");
-                            progressBar.setValue(0);
-                        }
-                    }
-                }
-            });
+                    });
 
             task.execute();
         }
@@ -760,26 +753,39 @@ public class MainView extends javax.swing.JFrame {
         model.getMediaType().getRecords().remove(recordsTable.getSelectedRow());
 
         model.fireDeleted(recordsTable.getSelectedRow());
+        saved = false;
     }//GEN-LAST:event_deleteRecordButtonActionPerformed
 
     private void editRecordButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editRecordButtonActionPerformed
         OdfTableModel model = (OdfTableModel) recordsTable.getModel();
         List newAttributes = Dialogs.editRecordDialog(recordsTable.getSelectedRow(), model.getMediaType());
+        manager.editRecord(categoriesList.getSelectedValue().toString(), recordsTable.getSelectedRow() + 1, newAttributes);
+
+        model.fireUpdate(recordsTable.getSelectedRow());
 
         if (newAttributes != null) {
             manager.editRecord(categoriesList.getSelectedValue().toString(), recordsTable.getSelectedRow() + 1, newAttributes);
             model.fireUpdate(recordsTable.getSelectedRow());
         }
+        saved = false;
     }//GEN-LAST:event_editRecordButtonActionPerformed
 
     private void exitMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitMenuItemActionPerformed
-        System.exit(0);
+        if (!saved) {
+            int dialogResult = JOptionPane.showConfirmDialog(this, "Opravdu chcete ukon4it aplikaci VideoDesGApps? "
+                    + "Veškerá neuložená data budou ztracena", "Potvrzení", JOptionPane.YES_NO_OPTION);
+
+            if (dialogResult == JOptionPane.YES_OPTION) {
+                System.exit(0);
+            }
+        } else {
+            disconnect();
+        }
     }//GEN-LAST:event_exitMenuItemActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addCategoryButton;
     private javax.swing.JButton addRecordButton;
-    private javax.swing.JLabel backgroundActionTF;
     private javax.swing.JList categoriesList;
     private javax.swing.JButton connectButton;
     private javax.swing.JMenuItem connectMenuItem;
@@ -818,6 +824,7 @@ public class MainView extends javax.swing.JFrame {
     private javax.swing.JLabel searchLabel;
     private javax.swing.JTextField searchTF;
     private javax.swing.JPanel statusBar;
+    private javax.swing.JLabel statusLabel;
     // End of variables declaration//GEN-END:variables
 
     private class DownloadFileTask extends SwingWorker<java.io.File, Integer> {
@@ -837,7 +844,7 @@ public class MainView extends javax.swing.JFrame {
 
         @Override
         protected void done() {
-            backgroundActionTF.setText("Soubor stáhnut");
+            statusLabel.setText("Soubor stáhnut");
             try {
                 java.io.File downloadedFile = this.get();
 
@@ -850,6 +857,8 @@ public class MainView extends javax.swing.JFrame {
                     model.add(i, manager.getMediaNames().get(i));
                 }
                 categoriesList.setModel(model);
+
+                saved = true;
                 addCategoryButton.setEnabled(true);
             } catch (InterruptedException ex) {
                 Logger.getLogger(MainView.class.getName()).log(Level.SEVERE, null, ex);
@@ -886,7 +895,8 @@ public class MainView extends javax.swing.JFrame {
                     JOptionPane.showMessageDialog(rootPane, "Chyba při ukládání souboru", "Chyba", JOptionPane.ERROR_MESSAGE);
                 } else {
                     actualFile = updatedFile;
-                    backgroundActionTF.setText("Soubor uložen");
+                    statusLabel.setText("Soubor uložen");
+                    saved = true;
                 }
             } catch (InterruptedException ex) {
                 Logger.getLogger(MainView.class.getName()).log(Level.SEVERE, null, ex);
@@ -924,7 +934,9 @@ public class MainView extends javax.swing.JFrame {
                     JOptionPane.showMessageDialog(rootPane, "Chyba při ukládání souboru", "Chyba", JOptionPane.ERROR_MESSAGE);
                 } else {
                     actualFile = updatedFile;
-                    backgroundActionTF.setText("Soubor uložen");
+                    statusLabel.setText("Soubor uložen");
+
+                    saved = true;
                 }
             } catch (InterruptedException ex) {
                 Logger.getLogger(MainView.class.getName()).log(Level.SEVERE, null, ex);
@@ -934,5 +946,109 @@ public class MainView extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(rootPane, "Chyba při ukládání souboru", "Chyba", JOptionPane.ERROR_MESSAGE);
             }
         }
+    }
+    
+    private class ConnectToGoogleDriveTask extends SwingWorker<GoogleDriveService, Integer> {
+
+        public static final int CONNECTION_SUCCESSFUL = 0;
+        public static final int CONNECTION_FAILED = 1;
+        private GoogleConnection gc;
+        private String code;
+
+        public ConnectToGoogleDriveTask(GoogleConnection gc, String code) {
+            this.gc = gc;
+            this.code = code;
+        }
+
+        @Override
+        protected GoogleDriveService doInBackground() throws Exception {
+            GoogleDriveService gds = null;
+            try {
+                gc.connect(code);
+                if (gc.isConnected()) {
+                    publish(CONNECTION_SUCCESSFUL);
+                    gds = gc.buildService();
+                } else {
+                    publish(CONNECTION_FAILED);
+                }
+
+            } catch (Exception ex) {
+                Logger.getLogger(MainView.class
+                        .getName()).log(Level.INFO, null, ex);
+            }
+            return gds;
+        }
+
+        @Override
+        protected void process(List<Integer> chunks) {
+            for (int chunk : chunks) {
+                if (chunk == CONNECTION_SUCCESSFUL) {
+                    statusLabel.setText("Připojeno. Ověřuji oprávnění");
+                    progressBar.setValue(50);
+                } else {
+                    statusLabel.setText("Chyba připojování");
+                    progressBar.setValue(0);
+                }
+            }
+        }
+
+        @Override
+        protected void done() {
+            try {
+                GoogleDriveService gds = this.get();
+
+                if (gds != null) {
+                    service = gds;
+
+                    connectionStateLabel.setText("<html><b>Jste připojeni</b></html>");
+                    connectionStateLabel.setForeground(Color.GREEN);
+
+                    for (ActionListener listener : openFileButton.getActionListeners()) {
+                        openFileButton.removeActionListener(listener);
+                    }
+
+                    openFileButton.setText("Otevřít");
+                    openFileButton.addActionListener(new ActionListener() {
+                        public void actionPerformed(ActionEvent e) {
+                            openFileButtonActionPerformed(e);
+                        }
+                    });
+
+                    java.awt.GridBagConstraints gridBagConstraints = new java.awt.GridBagConstraints();
+                    gridBagConstraints.gridx = 0;
+                    gridBagConstraints.gridy = 3;
+                    gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+                    jPanel1.remove(disconnectedPanel);
+                    jPanel1.add(connectedPanel, gridBagConstraints);
+                    jPanel1.repaint();
+
+                    // Enabling menu items
+                    connectMenuItem.setEnabled(false);
+                    openFileMenuItem.setEnabled(true);
+                    saveFileMenuItem.setEnabled(true);
+                    saveFileAsMenuItem.setEnabled(true);
+                    disconnectMenuItem.setEnabled(true);
+
+                    saved = true;
+                } else {
+                    JOptionPane.showMessageDialog(null, "Nepodařilo se připojit k Vašemu účtu Google", "Chyba připojení", JOptionPane.INFORMATION_MESSAGE);
+                }
+            } catch (InterruptedException ex) {
+                Logger.getLogger(MainView.class
+                        .getName()).log(Level.SEVERE, null, ex);
+                JOptionPane.showMessageDialog(rootPane,
+                        "Chyba při připojování ke Google Drive", "Chyba", JOptionPane.ERROR_MESSAGE);
+            } catch (ExecutionException ex) {
+                Logger.getLogger(MainView.class
+                        .getName()).log(Level.SEVERE, null, ex);
+                JOptionPane.showMessageDialog(rootPane,
+                        "Chyba při připojování ke Google Drive", "Chyba", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }
+    
+    public static Image getImage(final String pathAndFileName) {
+        final URL url = Thread.currentThread().getContextClassLoader().getResource(pathAndFileName);
+        return Toolkit.getDefaultToolkit().getImage(url);
     }
 }
