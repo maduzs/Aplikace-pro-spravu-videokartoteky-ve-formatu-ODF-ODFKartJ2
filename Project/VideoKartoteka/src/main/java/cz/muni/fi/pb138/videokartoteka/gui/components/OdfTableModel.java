@@ -14,7 +14,6 @@ public class OdfTableModel extends AbstractTableModel {
     private MediaType mediaType = new MediaType();
 
     public OdfTableModel() {
-
     }
 
     @Override
@@ -51,12 +50,16 @@ public class OdfTableModel extends AbstractTableModel {
     public MediaType getMediaType() {
         return mediaType;
     }
-
-    public void fireInserted() {
-        fireTableRowsInserted(mediaType.getRecords().size() - 1, mediaType.getRecords().size() - 1);
+    
+    public void fireInserted(){
+        fireTableRowsInserted(mediaType.getRecords().size()-1, mediaType.getRecords().size()-1);
     }
-
-    public void fireDeleted(int index) {
+    
+    public void fireDeleted(int index){
         fireTableRowsDeleted(index, index);
+    }
+    
+    public void fireUpdate(int index) {
+        fireTableRowsUpdated(index, index);
     }
 }
