@@ -17,6 +17,13 @@ import javax.swing.SpinnerNumberModel;
  */
 public class Dialogs {
 
+    /**
+     * Shows dialog with empty JTextFields for attributes and creates new record
+     * in the mediaType.
+     *
+     * @param mediaType mediaType we want to put record in
+     * @return created record or null when the Cancel button was clicked
+     */
     public static List<String> newRecordDialog(MediaType mediaType) {
         JPanel newPanel = new JPanel(new GridLayout(0, 2));
         for (Object attribute : mediaType.getAttributes()) {
@@ -36,6 +43,14 @@ public class Dialogs {
         return null;
     }
 
+    /**
+     * Shows dialog with JTextFields filled with attributes of the chosen record
+     * and changes the chosen record in mediaType.
+     *     
+     * @param index index of the record we want to edit
+     * @param mediaType mediaType we want to edit record in
+     * @return edited record or null when the Cancel button was clicked
+     */
     public static List<String> editRecordDialog(int index, MediaType mediaType) {
         JPanel newPanel = new JPanel(new GridLayout(0, 2));
         for (Object attribute : mediaType.getAttributes()) {
@@ -67,6 +82,14 @@ public class Dialogs {
         return null;
     }
 
+    /**
+     * Shows 2 dialogs: first to choose name and the amount of attributes,
+     * second to fill the names of the attributes. Creates new mediaType and
+     * returns it.
+     *     
+     * @return created mediaType or null when the Cancel button was clicked or
+     * because of wrong input.
+     */
     public static MediaType newMediaTypeDialog(List oldMediaNames) {
         JPanel spinnerPanel = new JPanel(new GridLayout(0, 2));
         JSpinner amountOfAttributes = new JSpinner();
@@ -112,8 +135,7 @@ public class Dialogs {
                         }
 
                     }
-                }
-                else{
+                } else {
                     JOptionPane.showMessageDialog(null, "Name of the media already exists", "Existing name", JOptionPane.ERROR_MESSAGE);
                 }
 

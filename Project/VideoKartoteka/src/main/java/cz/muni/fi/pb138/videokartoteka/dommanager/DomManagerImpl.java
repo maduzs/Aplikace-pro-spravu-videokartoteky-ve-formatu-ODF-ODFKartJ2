@@ -149,6 +149,7 @@ public class DomManagerImpl implements DomManager {
 
     }
 
+    @Override
     public MediaType loadTableToMediaType(String media) {
         MediaType type = new MediaType();
 
@@ -257,6 +258,7 @@ public class DomManagerImpl implements DomManager {
 
     }
 
+    @Override
     public java.io.File saveSpreadSheet() {
         try {
             inputDocument.save(file);
