@@ -481,7 +481,11 @@ public class MainView extends javax.swing.JFrame {
 
         if (Desktop.isDesktopSupported()) {
             try {
-                Desktop.getDesktop().browse(new URI(gc.getAuthorizationUrl()));
+                Desktop desktop = Desktop.getDesktop();
+                
+                if (desktop.isSupported(Desktop.Action.BROWSE)) {
+                    desktop.browse(new URI(gc.getAuthorizationUrl()));
+                }
             } catch (IOException ex) {
                 Logger.getLogger(MainView.class.getName()).log(Level.SEVERE, null, ex);
             } catch (URISyntaxException ex) {
