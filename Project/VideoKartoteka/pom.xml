@@ -1,0 +1,120 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>cz.muni.fi.pb138.VideoKartoteka</groupId>
+    <artifactId>VideoKartoteka</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
+
+    <name>VideoKartoteka</name>
+    <url>http://maven.apache.org</url>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.google.api-client</groupId>
+            <artifactId>google-api-client-java6</artifactId>
+            <version>1.15.0-rc</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>com.google.oauth-client</groupId>
+            <artifactId>google-oauth-client-jetty</artifactId>
+            <version>1.15.0-rc</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>com.google.http-client</groupId>
+            <artifactId>google-http-client-jackson</artifactId>
+            <version>1.15.0-rc</version>
+        </dependency>
+      
+        <dependency>
+            <groupId>com.google.apis</groupId>
+            <artifactId>google-api-services-drive</artifactId>
+            <version>v2-rev75-1.15.0-rc</version>
+        </dependency>
+
+      
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>3.8.1</version>
+            <scope>test</scope>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.odftoolkit</groupId>
+            <artifactId>odfdom-java</artifactId>
+            <version>0.8.7</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>xerces</groupId>
+            <artifactId>xercesImpl</artifactId>
+            <version>2.8.1</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.odftoolkit</groupId>
+            <artifactId>simple-odf</artifactId>
+            <version>0.6.6</version>
+        </dependency>
+            
+    </dependencies>
+    
+    <build>
+        <plugins>
+            <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-shade-plugin</artifactId>
+            <version>1.4</version>
+            <executions>
+                <execution>
+                    <phase>package</phase>
+                    <goals>
+                        <goal>shade</goal>
+                    </goals>
+                    <configuration>
+                        <artifactSet>
+                        <!-- signed jars-->
+                            <excludes>
+                                <exclude>bouncycastle:bcprov-jdk15</exclude>
+                            </excludes>
+                        </artifactSet>
+
+                         <transformers>
+                            <transformer
+                                implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                <!-- Main class -->
+                                <mainClass>cz.muni.fi.pb138.videokartoteka.Main</mainClass>
+                            </transformer>
+                            <!-- Use resource transformers to prevent file overwrites -->
+                            <transformer 
+                                 implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+                                <resource>properties.properties</resource>
+                            </transformer>
+                            <transformer
+                                implementation="org.apache.maven.plugins.shade.resource.XmlAppendingTransformer">
+                                <resource>applicationContext.xml</resource>
+                            </transformer>
+                            <transformer
+                                implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+                                <resource>META-INF/cxf/cxf.extension</resource>
+                            </transformer>
+                            <transformer
+                                implementation="org.apache.maven.plugins.shade.resource.XmlAppendingTransformer">
+                                <resource>META-INF/cxf/bus-extensions.xml</resource>
+                            </transformer>
+                     </transformers>
+                    </configuration>
+                </execution>
+            </executions>
+        </plugin>
+        </plugins>
+    </build>
+</project>
