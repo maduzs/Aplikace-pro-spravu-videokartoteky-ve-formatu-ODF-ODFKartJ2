@@ -3,21 +3,21 @@
 <?xml-model href="http://docbook.org/xml/5.0/rng/docbook.rng" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?>
 <section xmlns="http://docbook.org/ns/docbook" 
     xmlns:xlink="http://www.w3.org/1999/xlink" version="5.0">
-    <title>Závereèná správa</title>
-    <para>Tému sme si vybrali spoloène s kamarátom Matúšom a Lukášom a neskôr sa k nám pripojil štvrtı èlen Maroš. 
-		Pôvodne bola téma u obsadená ale na vyiadanie sme dostali povolenie implementova ju tie s pouitím google drive. 
-		Komunikovali sme prevane cez facebook chat a tam sme si aj zadelili úlohy. Mojou úlohou bolo vytvori logiku
-		aplikácie Dom Manager a prepoji ju s GUI na swingu. Matúš si zobral na starosti google drive a Maroš import a export kartotéky</para>
-    <para>Aplikácia mala fungova nasledovne: pomocou Google drive API sa získal prístup k vzdialenému ODF súboru.
-		Ten sa následne lokálne naèítal pomocou DOM managera a lokálne sa na òom vykonávali zmeny, ktoré sa následne
-		uloili pomocou google drive vzdialene do pôvodného súboru. Základné funkcie ktoré mala aplikácia
-		obsahova boli: správa kategórií (pridávanie, odstránenie) a správa jednotlivıch záznamov (kartoték):
-		pridávanie, odstránenie, upravenie. Kadá kategória mala volite¾nı formát a teda pri jej vytváraní sa definoval
-		poèet atribútov a ich názvy. Potom pri pridávaní ako aj úprave média sa tieto atribúty vyplòovali.</para>
-    <para>Vıvoj prebiehal viacmenej samostatne, prièom dôleité bolo prvotné zadelenie úloh. Kadı potom vyvıjal svoju
-		èas a následne sme vykonali integráciu hotovıch komponentov, na ktorej sme u pracovali spoloène.
-		Lukáš náš tím opustil, preto sme okresali pôvodnú funkcionalitu a zamerali sa len na potrebné prvky spåòajúce špecifikáciu.</para>
-    <para>Na tomto projekte som sa nauèil mnohé zaujímavé poznatky z oblasti spracovania a práce s XML súbormi, ich vyuitie a 
-		rôzne pomocné technológie, ktoré pomáhajú pri automatickom spracovaní XML súborov. Tieto poznatky ako aj skúsenos s tímovım
-		vıvojom aplikácie urèite v budúcnosti vyuijem v praxi.</para>
+    <title>ZÃ¡vereÄnÃ¡ sprÃ¡va</title>
+    <para>TÃ©mu sme si vybrali spoloÄne s kamarÃ¡tom MatÃºÅ¡om a LukÃ¡Å¡om a neskÃ´r sa k nÃ¡m pripojil Å¡tvrtÃ½ Älen MaroÅ¡. 
+		PÃ´vodne bola tÃ©ma uÅ¾ obsadenÃ¡ ale na vyÅ¾iadanie sme dostali povolenie implementovaÅ¥ ju tieÅ¾ s pouÅ¾itÃ­m google drive. 
+		Komunikovali sme prevaÅ¾ne cez facebook chat a tam sme si aj zadelili Ãºlohy. Mojou Ãºlohou bolo vytvoriÅ¥ logiku
+		aplikÃ¡cie Dom Manager a prepojiÅ¥ ju s GUI na swingu. MatÃºÅ¡ si zobral na starosti google drive a MaroÅ¡ import a export kartotÃ©ky</para>
+    <para>AplikÃ¡cia mala fungovaÅ¥ nasledovne: pomocou Google drive API sa zÃ­skal prÃ­stup k vzdialenÃ©mu ODF sÃºboru.
+		Ten sa nÃ¡sledne lokÃ¡lne naÄÃ­tal pomocou DOM managera a lokÃ¡lne sa na Åˆom vykonÃ¡vali zmeny, ktorÃ© sa nÃ¡sledne
+		uloÅ¾ili pomocou google drive vzdialene do pÃ´vodnÃ©ho sÃºboru. ZÃ¡kladnÃ© funkcie ktorÃ© mala aplikÃ¡cia
+		obsahovaÅ¥ boli: sprÃ¡va kategÃ³riÃ­ (pridÃ¡vanie, odstrÃ¡nenie) a sprÃ¡va jednotlivÃ½ch zÃ¡znamov (kartotÃ©k):
+		pridÃ¡vanie, odstrÃ¡nenie, upravenie. KaÅ¾dÃ¡ kategÃ³ria mala voliteÄ¾nÃ½ formÃ¡t a teda pri jej vytvÃ¡ranÃ­ sa definoval
+		poÄet atribÃºtov a ich nÃ¡zvy. Potom pri pridÃ¡vanÃ­ ako aj Ãºprave mÃ©dia sa tieto atribÃºty vyplÅˆovali.</para>
+    <para>VÃ½voj prebiehal viacmenej samostatne, priÄom dÃ´leÅ¾itÃ© bolo prvotnÃ© zadelenie Ãºloh. KaÅ¾dÃ½ potom vyvÃ½jal svoju
+		ÄasÅ¥ a nÃ¡sledne sme vykonali integrÃ¡ciu hotovÃ½ch komponentov, na ktorej sme uÅ¾ pracovali spoloÄne.
+		LukÃ¡Å¡ nÃ¡Å¡ tÃ­m opustil, preto sme okresali pÃ´vodnÃº funkcionalitu a zamerali sa len na potrebnÃ© prvky spÄºÅˆajÃºce Å¡pecifikÃ¡ciu.</para>
+    <para>Na tomto projekte som sa nauÄil mnohÃ© zaujÃ­mavÃ© poznatky z oblasti spracovania a prÃ¡ce s XML sÃºbormi, ich vyuÅ¾itie a 
+		rÃ´zne pomocnÃ© technolÃ³gie, ktorÃ© pomÃ¡hajÃº pri automatickom spracovanÃ­ XML sÃºborov. Tieto poznatky ako aj skÃºsenosÅ¥ s tÃ­movÃ½m
+		vÃ½vojom aplikÃ¡cie urÄite v budÃºcnosti vyuÅ¾ijem v praxi.</para>
 </section>
