@@ -3,10 +3,19 @@
 <?xml-model href="http://docbook.org/xml/5.0/rng/docbook.rng" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?>
 <section xmlns="http://docbook.org/ns/docbook" 
     xmlns:xlink="http://www.w3.org/1999/xlink" version="5.0">
-    <title>Záverecnı report</title>
-    	<para>Projekt sme zacali vytvorením UML a Class diagramov, spolu s vytvorením základného skeletonu projektu. V tento fáze s nami spolupracoval aj Lukáš Farkaš, 		ktorı tím ial z casovıch dôvodov musel pocas vıvoja opustit. </para>
-	<para>Po prvıch commitoch som však musel skeleton trochu upravit a pridat prvé GoogleDrive triedy, konkrétne GoogleConnection a GoogleDriveService, spolu s 			pridaním dependency do pom.xml a otestovaním fungovania v Main.java. Skúsil som základné prihlásenie appky vdaka OAuth 2.0 protokolu po registrácii 			appky do Google sluieb. Po úspešnom otestovaní prihlásenia na necisto som sa dalej podielal na úpravách GUI, ako aj jeho spojením s 				 	GoogleConnection.</para>
-	<para>Po základnıch commitoch ODF dom triedy a ODF table modely som pridal aj cast s Dom manager, rovnako ako aj upravoval vyššie  spomenuté triedy. V tejto 			fáze prebiehala vzájomná komunikácia s clenmi tímu, najviac s Michal Taraj, ako aj vzájomné študovanie castí kódu. </para>
-	<para>V závere projektu som ešte vykonal mierny refactoring kvôli prehladnosti kódu. Najväcšie vızvy ma cakali s rozbehaním samotného pripojenia GoogleDrive 			pomocou prihlasovacieho protokolu. Nakoniec som však aj vdaka vıbornım príkladom a dokumentáciou na internete tieto problémy zvládol. Dalšou vızvou 			bolo spojenie GoogleDrive funkcionality s aplikáciou spolu s napojením na Swing workerov a logiku aplikácie. Vzájomnou koordináciou sme to však			 	zvládli. </para>
-	<para>Bol som zvolenı za projektového lídra a mal som tú cest zahájit a viest obhajobu. Prácu tímu hodnotím velmi pozitívne s rıchlou a efektívnou vzájomnou 			komunikáciou. Pracovalo sa mi príjemne a vıvoj prebiehal svieo a plynulo.</para>
+    <title>ZÃ¡vereÄnÃ½ report</title>
+    	<para>Projekt sme zacali vytvorenÃ­m UML a Class diagramov, spolu s vytvorenÃ­m zÃ¡kladnÃ©ho skeletonu projektu. V tento fÃ¡ze s nami spolupracoval aj LukÃ¡Å¡ FarkaÅ¡,
+    		ktorÃ½ tÃ­m Å¾ial z casovÃ½ch dÃ´vodov musel pocas vÃ½voja opustit. </para>
+	<para>Po prvÃ½ch commitoch som vÅ¡ak musel skeleton trochu upravit a pridat prvÃ© GoogleDrive triedy, konkrÃ©tne GoogleConnection a GoogleDriveService, spolu s 		
+		pridanÃ­m dependency do pom.xml a otestovanÃ­m fungovania v Main.java. SkÃºsil som zÃ¡kladnÃ© prihlÃ¡senie appky vdaka OAuth 2.0 protokolu po registrÃ¡cii 		
+		appky do Google sluÅ¾ieb. Po ÃºspeÅ¡nom otestovanÃ­ prihlÃ¡senia na necisto som sa dalej podielal na ÃºpravÃ¡ch GUI, ako aj jeho spojenÃ­m s 				 
+		GoogleConnection.</para>
+	<para>Po zÃ¡kladnÃ½ch commitoch ODF dom triedy a ODF table modely som pridal aj cast s Dom manager, rovnako ako aj upravoval vyÅ¡Å¡ie  spomenutÃ© triedy. V tejto 	
+		fÃ¡ze prebiehala vzÃ¡jomnÃ¡ komunikÃ¡cia s clenmi tÃ­mu, najviac s Michal Taraj, ako aj vzÃ¡jomnÃ© Å¡tudovanie castÃ­ kÃ³du. </para>
+	<para>V zÃ¡vere projektu som eÅ¡te vykonal mierny refactoring kvÃ´li prehladnosti kÃ³du. NajvÃ¤cÅ¡ie vÃ½zvy ma cakali s rozbehanÃ­m samotnÃ©ho pripojenia GoogleDrive 		
+		pomocou prihlasovacieho protokolu. Nakoniec som vÅ¡ak aj vdaka vÃ½bornÃ½m prÃ­kladom a dokumentÃ¡ciou na internete tieto problÃ©my zvlÃ¡dol. DalÅ¡ou vÃ½zvou 		
+		bolo spojenie GoogleDrive funkcionality s aplikÃ¡ciou spolu s napojenÃ­m na Swing workerov a logiku aplikÃ¡cie. VzÃ¡jomnou koordinÃ¡ciou sme to vÅ¡ak		
+		zvlÃ¡dli. </para>
+	<para>Bol som zvolenÃ½ za projektovÃ©ho lÃ­dra a mal som tÃº cest zahÃ¡jit a viest obhajobu. PrÃ¡cu tÃ­mu hodnotÃ­m velmi pozitÃ­vne s rÃ½chlou a efektÃ­vnou vzÃ¡jomnou 	
+		komunikÃ¡ciou. Pracovalo sa mi prÃ­jemne a vÃ½voj prebiehal svieÅ¾o a plynulo.</para>
 </section>
