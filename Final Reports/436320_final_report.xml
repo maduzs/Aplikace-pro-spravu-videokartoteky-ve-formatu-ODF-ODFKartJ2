@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="http://docbook.org/xml/5.0/rng/docbook.rng" schematypens="http://relaxng.org/ns/structure/1.0"?>
+<?xml-model href="http://docbook.org/xml/5.0/rng/docbook.rng" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?>
+<section xmlns="http://docbook.org/ns/docbook" 
+    xmlns:xlink="http://www.w3.org/1999/xlink" version="5.0">
+    <title>Záverecný report</title>
+    <para>	Projekt sme zacali vytvorením UML a Class diagramov, spolu s vytvorením základného skeletonu projektu. V tento fáze s nami 								 			spolupracoval aj Lukáš Farkaš, ktorý tím žial z casových dôvodov musel pocas vývoja opustit. </para>
+	<para> 	Po prvých commitoch som však musel skeleton trochu upravit a pridat prvé GoogleDrive triedy, konkrétne GoogleConnection a 																							 			GoogleDriveService, spolu s pridaním dependency do pom.xml a otestovaním fungovania v Main.java. Skúsil som základné prihlásenie  	 			appky vdaka OAuth 2.0 protokolu po registrácii appky do Google služieb. Po úspešnom otestovaní prihlásenia na necisto som sa dalej   			podielal na úpravách GUI, ako aj jeho spojením s GoogleConnection. </para>
+	<para> 	Po základných commitoch ODF dom triedy a ODF table modely som pridal aj cast s Dom manager, rovnako ako aj upravoval vyššie  			 			spomenuté triedy. V tejto fáze prebiehala vzájomná komunikácia s clenmi tímu, najviac s Michal Taraj, ako aj vzájomné študovanie  			 			castí kódu. </para>
+	<para>	V závere projektu som ešte vykonal mierny refactoring kvôli prehladnosti kódu. Najväcšie výzvy ma cakali s rozbehaním samotného  		 			pripojenia GoogleDrive pomocou prihlasovacieho protokolu. Nakoniec som však aj vdaka výborným príkladom a dokumentáciou na internete  			tieto problémy zvládol. Dalšou výzvou bolo spojenie GoogleDrive funkcionality s aplikáciou spolu s napojením na Swing workerov a  	 			logiku aplikácie. Vzájomnou koordináciou sme to však zvládli. </para>
+	<para>	Bol som zvolený za projektového lídra a mal som tú cest zahájit a viest obhajobu. Prácu tímu hodnotím velmi pozitívne s rýchlou a  			 			efektívnou vzájomnou komunikáciou. Pracovalo sa mi príjemne a vývoj prebiehal sviežo a plynulo.</para>
+</section>
