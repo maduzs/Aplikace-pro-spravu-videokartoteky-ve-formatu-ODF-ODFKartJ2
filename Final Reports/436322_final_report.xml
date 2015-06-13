@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="http://docbook.org/xml/5.0/rng/docbook.rng" schematypens="http://relaxng.org/ns/structure/1.0"?>
+<?xml-model href="http://docbook.org/xml/5.0/rng/docbook.rng" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?>
+<section xmlns="http://docbook.org/ns/docbook" 
+    xmlns:xlink="http://www.w3.org/1999/xlink" version="5.0">
+    <title>Závereèná správa</title>
+    <para>Tému sme si vybrali spoloène s kamarátom Matúšom a Lukášom a neskôr sa k nám pripojil štvrtı èlen Maroš. 
+		Pôvodne bola téma u obsadená ale na vyiadanie sme dostali povolenie implementova ju tie s pouitím google drive. 
+		Komunikovali sme prevane cez facebook chat a tam sme si aj zadelili úlohy. Mojou úlohou bolo vytvori logiku
+		aplikácie Dom Manager a prepoji ju s GUI na swingu. Matúš si zobral na starosti google drive a Maroš import a export kartotéky</para>
+    <para>Aplikácia mala fungova nasledovne: pomocou Google drive API sa získal prístup k vzdialenému ODF súboru.
+		Ten sa následne lokálne naèítal pomocou DOM managera a lokálne sa na òom vykonávali zmeny, ktoré sa následne
+		uloili pomocou google drive vzdialene do pôvodného súboru. Základné funkcie ktoré mala aplikácia
+		obsahova boli: správa kategórií (pridávanie, odstránenie) a správa jednotlivıch záznamov (kartoték):
+		pridávanie, odstránenie, upravenie. Kadá kategória mala volite¾nı formát a teda pri jej vytváraní sa definoval
+		poèet atribútov a ich názvy. Potom pri pridávaní ako aj úprave média sa tieto atribúty vyplòovali.</para>
+    <para>Vıvoj prebiehal viacmenej samostatne, prièom dôleité bolo prvotné zadelenie úloh. Kadı potom vyvıjal svoju
+		èas a následne sme vykonali integráciu hotovıch komponentov, na ktorej sme u pracovali spoloène.
+		Lukáš náš tím opustil, preto sme okresali pôvodnú funkcionalitu a zamerali sa len na potrebné prvky spåòajúce špecifikáciu.</para>
+    <para>Na tomto projekte som sa nauèil mnohé zaujímavé poznatky z oblasti spracovania a práce s XML súbormi, ich vyuitie a 
+		rôzne pomocné technológie, ktoré pomáhajú pri automatickom spracovaní XML súborov. Tieto poznatky ako aj skúsenos s tímovım
+		vıvojom aplikácie urèite v budúcnosti vyuijem v praxi.</para>
+</section>
