@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="http://docbook.org/xml/5.0/rng/docbook.rng" schematypens="http://relaxng.org/ns/structure/1.0"?>
+<?xml-model href="http://docbook.org/xml/5.0/rng/docbook.rng" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?>
+<section xmlns="http://docbook.org/ns/docbook" 
+         xmlns:xlink="http://www.w3.org/1999/xlink" version="5.0">
+  <title>Záverečná správa</title>
+  <para>
+    Ku kolegom som sa pridal do už zabehnutého projektu. Samotná téma ma oslovila už na začiatku, napojenie na Google drive som potom bral ako výzvu.
+    Chalani zvládli začiatok výborne, takže nebol potrebný výrazný refaktoring kódu. Vedenie týmu ako aj komunikáciu riadil Matúš.
+  </para>
+  <para>
+    Mojou úlohou bolo zastrešiť externú prácu s ODF súbormi (export a import), čo sa aj napriek drobným problémom podarilo. Najviac času mi zabralo
+    zpojazdnenie ODFDOM Toolkit API, avšak vďaka pomerne slušnej dokumentácii to nebolo náročné. Ďalej som sa zaoberal SWING workermi, logickým rozdelením
+    ich úloh a ich následným zakomponovaním do už existujúceho kódu aplikácie. Nakoniec následovalo celkové dolagenie logiky a GUI aplikácie, na ktorom
+    sa už podielali všetci členovia týmu.
+  </para>
+  <para>
+    Vývoj bol plynulý, bez väčších problémov. Každý člen presne vedel za čo zodpovedá a tak sa k tomu aj postavil. Komunikácia prebiehala v poriadku,
+    všetci sme vedeli čo máme robiť, myslím, že najmä vďaka Matúšovej organizácii.
+  </para>
+  <para>
+    Práca na tomto projekte mi rozšírila znalosti o XML a o všetkom, čo s tým súvisí. Najviac som sa však naučil pracovať v týme, ako prebieha taký vývoj
+    a čo všetko to obnáša.
+  </para>
+</section>
